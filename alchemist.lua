@@ -362,7 +362,7 @@ function Alchemist.OnUpdate()
 		end
 
 
-		if (100/(Entity.GetMaxHealth(myHero)/Entity.GetHealth(myHero))) < Menu.GetValue(Alchemist.optionSatanicSlider) then
+		if satanic and (100/(Entity.GetMaxHealth(myHero)/Entity.GetHealth(myHero))) < Menu.GetValue(Alchemist.optionSatanicSlider) then
 			if Alchemist.Satanic(satanic, mana) == true then
 				return
 			end
@@ -416,6 +416,10 @@ end
 --------------------------------------------------------------------------------------------------------------------------------
 --Рисуем Партикль
 function Alchemist.OnDraw()
+	if (not myHero) then
+		return
+	end	
+	
 	if NPC.GetUnitName(myHero) ~= "npc_dota_hero_alchemist" then 
 		return
 	end
