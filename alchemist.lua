@@ -209,7 +209,7 @@ function Alchemist.OnUpdate()
 
 
 --Пинг
-	local TOTAL_LATENCY = NetChannel.GetAvgLatency(Enum.Flow.FLOW_INCOMING) + NetChannel.GetAvgLatency(Enum.Flow.FLOW_OUTGOING)
+--	local TOTAL_LATENCY = NetChannel.GetAvgLatency(Enum.Flow.FLOW_INCOMING) + NetChannel.GetAvgLatency(Enum.Flow.FLOW_OUTGOING)
 
 
 
