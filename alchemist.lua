@@ -24,16 +24,21 @@ local orderDelay2 = 0.2
 
 local RU = "russian"
 local EN = "english" 
+local CN = "Chinese" 
  
  
 local language = EN
  
-local LanguageItem = Menu.GetLanguageOptionId()
-local menuLang = Menu.GetValue(LanguageItem)
-if menuLang == 1 then -- ru
-	language = RU
-elseif menuLang == 0 then -- en
-	language = EN
+if Menu.GetLanguageOptionId then
+    local LanguageItem = Menu.GetLanguageOptionId()
+    local menuLang = Menu.GetValue(LanguageItem)
+    if menuLang == 1 then -- ru
+      language = RU
+    elseif menuLang == 0 then -- en
+      language = EN
+	elseif menuLang == 2 then -- cn
+	  language = CN
+    end
 end
 
 
@@ -42,38 +47,47 @@ local Translation = {
     ["optionEnable"] = {
         [RU] = "Включение",
         [EN] = "Enable",
+		[CN] = "启用",
     },
     ["optionRangeToTarget"] = {
         [RU] = "Расстояние  от мышки до врага для комбо",
         [EN] = "Distance from mouse to enemy for combo",
+		[CN] = "锁定最接近鼠标附近的敌人",
     },
     ["optionFullCombo"] = {
     	[RU] = "Кнопка для комбо",
     	[EN] = "Combo button",
+		[CN] = "combo键",
     },
     ["optionConcoctionSlider"] = {
     	[RU] = "Кол-во секунд до броска",
     	[EN] = "How many seconds to throw",
+		[CN] = "",
     },
     ["optionSatanicSlider"] = {
     	[RU] = "Порог здоровья в %",
     	[EN] = "HPercent Threshold",
+		[CN] = "生命值百分比",
     },
     ["optionBlinkSlider"] = {
     	[RU] = "Минимальная дистанция до врага",
     	[EN] = "Min distance to enemy",
+		[CN] = "Min distance to enemy",
     },
     ["optionIsTargetParticleEnabled"] = {
     	[RU] = "Рисовать партикль захваченной цели",
     	[EN] = "Draws particle for current target",
+		[CN] = "目标指示器",
     },
     ["optionAutoDisable"] = {
     	[RU] = "Сбрасывать врагам колбочкой кастующиеся заклинания",
     	[EN] = "Interrupt enemies casting spells with a concoction",
+		[CN] = "Interrupt enemies casting spells with a concoction",
     },
     ["optionDodge"] = {
     	[RU] = "Уворачиваться от колбочки",
     	[EN] = "Dodge a concoction",
+		[CN] = "Dodge a concoction",
     },
 }
 
@@ -91,6 +105,13 @@ if language == RU then
     mainPath = {rootPath, "Alchemist"}
     skillsPath = {rootPath, "Alchemist", "Способности"}
     itemsPath = {rootPath, "Alchemist", "Предметы"}
+end 
+
+if language == CN then
+    rootPath = "独立英雄脚本"
+    mainPath = {rootPath, "炼金术士"}
+    skillsPath = {rootPath, "炼金术士", "技能"}
+    itemsPath = {rootPath, "炼金术士", "物品"}
 end 
 
 -------------------------------------------------------------------------------------------------

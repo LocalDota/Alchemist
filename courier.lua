@@ -31,16 +31,21 @@ end
 
 local RU = "russian"
 local EN = "english" 
+local CN = "Chinese" 
  
  
 local language = EN
  
-local LanguageItem = Menu.GetLanguageOptionId()
-local menuLang = Menu.GetValue(LanguageItem)
-if menuLang == 1 then -- ru
-	language = RU
-elseif menuLang == 0 then -- en
-	language = EN
+if Menu.GetLanguageOptionId then
+    local LanguageItem = Menu.GetLanguageOptionId()
+    local menuLang = Menu.GetValue(LanguageItem)
+    if menuLang == 1 then -- ru
+      language = RU
+    elseif menuLang == 0 then -- en
+      language = EN
+	elseif menuLang == 2 then -- cn
+	  language = CN
+    end
 end
 
 
@@ -48,26 +53,32 @@ local Translation = {
     ["optionEnable"] = {
         [RU] = "Включение",
         [EN] = "Enable",
+		[CN] = "开启",
     },
     ["optionAutoBurst"] = {
         [RU] = "Авто-Ускорение",
         [EN] = "Auto-Burst",
+		[CN] = "自动加速",
     },
     ["optionAutoShield"] = {
     	[RU] = "Авто-Щит",
     	[EN] = "Auto-Shield",
+		[CN] = "自动开盾",
     },
     ["optionEconomyCourier"] = {
     	[RU] = "Экономный Курьер",
     	[EN] = "Economy Courier",
+		[CN] = "信使最优设置",
     },
     ["optionSlider"] = {
     	[RU] = "Максимальное кол-во слотов манго",
     	[EN] = "Maximum number of mango slots",
+		[CN] = "自动收集芒果树芒果最大数量",
     },
     ["optionMango"] = {
     	[RU] = "Собирать Манго",
     	[EN] = "Collect Mango",
+		[CN] = "信使自动收集芒果",
     },
 }
 
@@ -80,6 +91,10 @@ if language == RU then
     mainPath = {rootPath, "Курьер"}
 end    
 
+if language == CN then
+    rootPath = "通用"
+    mainPath = {rootPath, "信使控制"}
+end    
 
 
 
