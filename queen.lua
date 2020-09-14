@@ -288,8 +288,7 @@ function Queen.OnUpdate()
 			return
 		end
 
-		local linken = NPC.GetItem(enemy, "item_sphere")
-		if linken and Ability.IsReady(linken) then
+		if NPC.IsLinkensProtected(enemy) then
 
 			if Menu.IsEnabled(Queen.optionStrikeL) then
 				if Queen.Strike(strike, mana, enemy) == true then
