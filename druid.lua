@@ -74,7 +74,7 @@ local Translation = {
     	[EN] = "Tp a bear in a combo if it's far away",
     },
     ["optionAutoRoarEnable"] = {
-    	[RU] = "Вклюсить Авто-Roar",
+    	[RU] = "Включить Авто-Roar",
     	[EN] = "Enable Auto-Roar",
     },
     ["optionAutoRoarDruid2"] = {
