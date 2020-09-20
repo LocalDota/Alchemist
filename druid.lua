@@ -613,7 +613,7 @@ function Druid.AutoReturn(ability, mana)
 end
 
 function Druid.AutoRoar(ability, mana)
-	if Menu.IsEnabled(Druid.optionAutoRoar) and Ability.IsReady(ability) and Ability.IsCastable(ability, mana)  then
+	if Menu.IsEnabled(Druid.optionAutoRoarEnable) and Ability.IsReady(ability) and Ability.IsCastable(ability, mana)  then
     	Ability.CastNoTarget(ability)
     	return true
     end	 
