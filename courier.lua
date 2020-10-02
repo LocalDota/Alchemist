@@ -40,12 +40,16 @@ local EN = "english"
  
 local language = EN
  
-local LanguageItem = Menu.GetLanguageOptionId()
-local menuLang = Menu.GetValue(LanguageItem)
-if menuLang == 1 then -- ru
-	language = RU
-elseif menuLang == 0 then -- en
-	language = EN
+if Menu.GetLanguageOptionId then
+    local LanguageItem = Menu.GetLanguageOptionId()
+    local menuLang = Menu.GetValue(LanguageItem)
+    if menuLang == 1 then -- ru
+      language = RU
+    elseif menuLang == 0 then -- en
+      language = EN
+	elseif menuLang == 2 then -- cn
+	  language = CN
+    end
 end
 
 

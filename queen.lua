@@ -28,16 +28,21 @@ local targetParticle = 0
 --Перевод
 local RU = "russian"
 local EN = "english" 
+local CN = "Chinese" 
  
  
 local language = EN
  
-local LanguageItem = Menu.GetLanguageOptionId()
-local menuLang = Menu.GetValue(LanguageItem)
-if menuLang == 1 then -- ru
-	language = RU
-elseif menuLang == 0 then -- en
-	language = EN
+if Menu.GetLanguageOptionId then
+    local LanguageItem = Menu.GetLanguageOptionId()
+    local menuLang = Menu.GetValue(LanguageItem)
+    if menuLang == 1 then -- ru
+      language = RU
+    elseif menuLang == 0 then -- en
+      language = EN
+	elseif menuLang == 2 then -- cn
+	  language = CN
+    end
 end
 
 
@@ -47,22 +52,27 @@ local Translation = {
     ["optionEnable"] = {
         [RU] = "Включение",
         [EN] = "Enable",
+		[CN] = "启用",
     },
     ["optionRangeToTarget"] = {
         [RU] = "Расстояние  от мышки до врага для комбо",
         [EN] = "Distance from mouse to enemy for combo",
+		[CN] = "靠近鼠标范围",
     },
     ["optionFullCombo"] = {
     	[RU] = "Кнопка для комбо",
     	[EN] = "Combo button",
+		[CN] = "combo键",
     },
     ["optionIsTargetParticleEnabled"] = {
     	[RU] = "Рисовать партикль захваченной цели",
     	[EN] = "Draws particle for current target",
+		[CN] = "目标指示器",
     },
     ["optionSatanicSlider"] = {
     	[RU] = "Порог здоровья в %",
     	[EN] = "HPercent Threshold",
+		[CN] = "生命值百分比",
     },
 }
 
@@ -85,6 +95,14 @@ if language == RU then
     skillsPath = {rootPath, "Queen", "Способности"}
     itemsPath = {rootPath, "Queen", "Предметы"}
     linkenPath = {rootPath, "Queen", "Сбитие Линки"}
+end 
+
+if language == CN then
+    rootPath = "独立英雄脚本"
+    mainPath = {rootPath, "Queen"}
+    skillsPath = {rootPath, "Queen", "技能"}
+    itemsPath = {rootPath, "Queen", "物品"}
+    linkenPath = {rootPath, "Queen", "自动破林肯"}
 end 
 ------------------------------------------------------------------------------------------------------------------------------------------------------------
 

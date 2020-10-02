@@ -31,16 +31,23 @@ local blinked = {}
 --Перевод
 local RU = "russian"
 local EN = "english" 
+local CN = "Chinese" 
  
  
 local language = EN
  
 local LanguageItem = Menu.GetLanguageOptionId()
 local menuLang = Menu.GetValue(LanguageItem)
-if menuLang == 1 then -- ru
-	language = RU
-elseif menuLang == 0 then -- en
-	language = EN
+if Menu.GetLanguageOptionId then
+    local LanguageItem = Menu.GetLanguageOptionId()
+    local menuLang = Menu.GetValue(LanguageItem)
+    if menuLang == 1 then -- ru
+      language = RU
+    elseif menuLang == 0 then -- en
+      language = EN
+	elseif menuLang == 2 then -- cn
+	  language = CN
+    end
 end
 
 
@@ -50,26 +57,32 @@ local Translation = {
     ["optionEnable"] = {
         [RU] = "Включение",
         [EN] = "Enable",
+		[CN] = "启用",
     },
     ["optionRangeToTarget"] = {
         [RU] = "Расстояние  от мышки до врага для комбо",
         [EN] = "Distance from mouse to enemy for combo",
+		[CN] = "靠近鼠标范围",
     },
     ["optionFullCombo"] = {
     	[RU] = "Кнопка для комбо",
     	[EN] = "Combo button",
+		[CN] = "Combo Key - combo键",
     },
     ["optionIsTargetParticleEnabled"] = {
     	[RU] = "Рисовать партикль захваченной цели",
     	[EN] = "Draws particle for current target",
+		[CN] = "目标指示器",
     },
     ["optionCursor"] = {
     	[RU] = "Двигаться к курсору если нет врага в комбо",
     	[EN] = "Move to cursor if no enemy in combo",
+		[CN] = "Move to cursor if no enemy in combo",
     },
     ["optionCarapaseDis"] = {
     	[RU] = "Анти-Инициация",
     	[EN] = "Anti-Initiation",
+		[EN] = "Anti-Initiation",
     },
 }
 
@@ -92,6 +105,14 @@ if language == RU then
     skillsPath = {rootPath, "Nyx", "Способности для Комбо"}
     itemsPath = {rootPath, "Nyx", "Предметы"}
     linkenPath = {rootPath, "Nyx", "Сбитие Линки"}
+end 
+
+if language == CN then
+    rootPath = "独立英雄脚本"
+    mainPath = {rootPath, "Nyx"}
+    skillsPath = {rootPath, "Nyx", "技能"}
+    itemsPath = {rootPath, "Nyx", "物品"}
+    linkenPath = {rootPath, "Nyx", "自动破林肯"}
 end 
 ------------------------------------------------------------------------------------------------------------------------------------------------------------
 
