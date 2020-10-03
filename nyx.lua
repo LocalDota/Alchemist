@@ -368,7 +368,8 @@ function Nyx.OnUpdate()
 			return
 		end
 
-		if Nyx.Impale(impale, Entity.GetAbsOrigin(enemy), mana) == true then
+		position =  Nyx.GetPredictedPosition(enemy, 1)
+		if Nyx.Impale(impale, position, mana) == true then
 			return
 		end
 
@@ -481,6 +482,17 @@ function Nyx.Vendetta(ability, mana, myHero, myPlayer, enemy, distance)
     end	
 end
 -----------------------------------------------------------------------------------------------------------------------------
+
+--Предикшн
+function Nyx.GetPredictedPosition(npc, delay)
+    local pos = Entity.GetAbsOrigin(npc)
+    if not NPC.IsRunning(npc) or not delay then return pos end
+
+    local dir = Entity.GetRotation(npc):GetForward():Normalized()
+    local speed = NPC.GetMoveSpeed(npc)
+
+    return pos + dir:Scaled(speed * delay)
+end
 
 
 
