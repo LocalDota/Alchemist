@@ -505,9 +505,10 @@ function Druid.OnUpdate()
 							Player.AttackTarget(myPlayer, bear, nearestHero)
 						end
 					end
-				end
-				if ((Entity.GetOrigin(nearestHero) - Entity.GetOrigin(myHero)):Length2D()) > 1100 and ((Entity.GetOrigin(bear) - Entity.GetOrigin(myHero)):Length2D()) > 400 then	
-					NPC.MoveTo(bear, Entity.GetOrigin(myHero))
+                else
+                    if ((Entity.GetOrigin(bear) - Entity.GetOrigin(myHero)):Length2D()) > 400 then  
+                        NPC.MoveTo(bear, Entity.GetOrigin(myHero))
+                    end    
 				end	
 			end
 			if bear and (not nearestHero) and ((Entity.GetOrigin(bear) - Entity.GetOrigin(myHero)):Length2D()) > 400 then	
