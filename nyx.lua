@@ -25,7 +25,6 @@ local blinked = {}
 
 
 
---asas
 
 
 -------------------------------------------------------------------------------------------------------------------------------------------------
@@ -84,6 +83,11 @@ local Translation = {
     	[RU] = "Анти-Инициация",
     	[EN] = "Anti-Initiation",
 		[EN] = "Anti-Initiation",
+    },
+    ["optionVendetta"] = {
+    	[RU] = "Атака из Vendetta",
+    	[EN] = "Attack from Vendetta",
+		[EN] = "",
     },
 }
 
@@ -148,7 +152,7 @@ Menu.AddOptionIcon(Nyx.optionBurn, "panorama/images/spellicons/".."nyx_assassin_
 Nyx.optionCarapase = Menu.AddOptionBool(skillsPath, "Spiked Carapace", false)
 Menu.AddOptionIcon(Nyx.optionCarapase, "panorama/images/spellicons/".."nyx_assassin_spiked_carapace".."_png.vtex_c")
 
-Nyx.optionVendetta = Menu.AddOptionBool(skillsPath, "Vendetta", false)
+Nyx.optionVendetta = Menu.AddOptionBool(skillsPath, Translation.optionVendetta[language], true)
 Menu.AddOptionIcon(Nyx.optionVendetta, "panorama/images/spellicons/".."nyx_assassin_vendetta".."_png.vtex_c")
 ---------------------------------------------------------------------------------------------------------------------------
 Nyx.optionSheepStick = Menu.AddOptionBool(itemsPath, "Scythe of Vyse", true)
