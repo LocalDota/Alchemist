@@ -537,22 +537,22 @@ function Druid.OnUpdate()
 
 	if Menu.IsEnabled(Druid.optionAutoRoarEnable) then
 		local nearestHero = Druid.FindNearestHero(myHero) 
-
+		local InRadius = #Entity.GetHeroesInRadius(myHero, 375, Enum.TeamType.TEAM_ENEMY)
 		--Анти-врыв
 		if Menu.IsEnabled(Druid.optionAutoRoarInitiation) and blinked[#blinked] and blinked[#blinked].unit and  blinked[#blinked].time and ((Entity.GetOrigin(myHero) - (Entity.GetOrigin(blinked[#blinked].unit))):Length2D()) < 375 and (GameRules.GetGameTime() - blinked[#blinked].time) < 0.1  then
 			Druid.AutoRoar(roar, mana)
 		end	
 
 		--Больше 2 врагов возле героя
-		if Menu.IsEnabled(Druid.optionAutoRoarDruid2) and  #Entity.GetHeroesInRadius(myHero, 375, Enum.TeamType.TEAM_ENEMY) >= 2 and nearestHero then
+		if Menu.IsEnabled(Druid.optionAutoRoarDruid2) and  InRadius >= 2 and nearestHero then
 			Druid.AutoRoar(roar, mana)
 		end	
 		--Больше2 врагов возле мишки
-		if Menu.IsEnabled(Druid.optionAutoRoarBear2) and  bear and  #Entity.GetHeroesInRadius(bear, 375, Enum.TeamType.TEAM_ENEMY) >= 2 and nearestHero then
+		if Menu.IsEnabled(Druid.optionAutoRoarBear2) and  bear and  InRadius >= 2 and nearestHero then
 			Druid.AutoRoar(roarB, manaB)
 		end	
 		--если у нашего героя меньше 50% хп и враг рядом
-		if Menu.IsEnabled(Druid.optionAutoRoarDruid1) and  #Entity.GetHeroesInRadius(myHero, 375, Enum.TeamType.TEAM_ENEMY) >= 1 and (100/(Entity.GetMaxHealth(myHero)/Entity.GetHealth(myHero))) < Menu.GetValue(Druid.optionRoarSlider) and nearestHero then
+		if Menu.IsEnabled(Druid.optionAutoRoarDruid1) and  InRadius >= 1 and (100/(Entity.GetMaxHealth(myHero)/Entity.GetHealth(myHero))) < Menu.GetValue(Druid.optionRoarSlider) and nearestHero then
 			Druid.AutoRoar(roar, mana)
 		end	
 		--Если возле нашего героя кастуется заклинание
