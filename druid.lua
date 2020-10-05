@@ -29,16 +29,21 @@ local targetParticle = 0
 --Перевод
 local RU = "russian"
 local EN = "english" 
+local CN = "Chinese" 
  
  
 local language = EN
  
-local LanguageItem = Menu.GetLanguageOptionId()
-local menuLang = Menu.GetValue(LanguageItem)
-if menuLang == 1 then -- ru
-	language = RU
-elseif menuLang == 0 then -- en
-	language = EN
+if Menu.GetLanguageOptionId then
+    local LanguageItem = Menu.GetLanguageOptionId()
+    local menuLang = Menu.GetValue(LanguageItem)
+    if menuLang == 1 then -- ru
+      language = RU
+    elseif menuLang == 0 then -- en
+      language = EN
+	elseif menuLang == 2 then -- cn
+	  language = CN
+    end
 end
 
 
@@ -48,94 +53,117 @@ local Translation = {
     ["optionEnable"] = {
         [RU] = "Включение",
         [EN] = "Enable",
+		[CN] = "启用",
     },
     ["optionRangeToTarget"] = {
         [RU] = "Расстояние  от мышки до врага для комбо",
         [EN] = "Distance from mouse to enemy for combo",
+		[CN] = "靠近鼠标范围",
     },
     ["optionFullCombo"] = {
     	[RU] = "Кнопка для полного комбо",
     	[EN] = "Button for full combo",
+		[CN] = "Button for full combo",
     },
     ["optionIsTargetParticleEnabled"] = {
     	[RU] = "Рисовать партикль захваченной цели",
     	[EN] = "Draws particle for current target",
+		[CN] = "目标指示器",
     },
     ["optionAutoPhaseB"] = {
     	[RU] = "Авто-Фейзы",
     	[EN] = "Auto-Phase Boots",
+		[CN] = "Auto-Phase Boots",
     },
     ["optionSatanicSlider"] = {
     	[RU] = "Порог здоровья в %",
     	[EN] = "HPercent Threshold",
+		[CN] = "生命值百分比",
     },
     ["optionComboB"] = {
     	[RU] = "Кнопка для комбо медведем",
     	[EN] = "Button for combo bear",
+		[CN] = "Button for combo bear",
     },
     ["optionAutoReturn"] = {
     	[RU] = "Тп медведя в комбо если он далеко",
     	[EN] = "Tp a bear in a combo if it's far away",
+		[CN] = "Tp a bear in a combo if it's far away",
     },
     ["optionAutoRoarEnable"] = {
     	[RU] = "Включить Авто-Roar",
     	[EN] = "Enable Auto-Roar",
+		[CN] = "Enable Auto-Roar",
     },
     ["optionAutoRoarDruid2"] = {
     	[RU] = "Если 2 или больше врагов рядом с героем",
     	[EN] = "If 2 or more enemies are near the hero",
+		[CN] = "If 2 or more enemies are near the hero",
     },
     ["optionAutoRoarBear2"] = {
     	[RU] = "Если 2 или больше врагов рядом с медведем",
     	[EN] = "If 2 or more enemies are near the bear",
+		[CN] = "If 2 or more enemies are near the bear",
     },
     ["optionAutoRoarDruidChan"] = {
     	[RU] = "Если враг кастуется рядом с героем",
     	[EN] = "If the enemy is casting near the hero",
+		[CN] = "If the enemy is casting near the hero",
     },
     ["optionAutoRoarBearChan"] = {
     	[RU] = "Если враг кастуется рядом с медведем",
     	[EN] = "If the enemy is casting near the bear",
+		[CN] = "If the enemy is casting near the bear",
     },
     ["optionAutoRoarDruid1"] = {
     	[RU] = "Если враг рядом с героем а у вас меньше % хп",
     	[EN] = "If the enemy near the hero and you have less than % HP",
+		[CN] = "If the enemy near the hero and you have less than % HP",
     },
     ["optionRoarSlider"] = {
     	[RU] = "Порог здоровья в %",
     	[EN] = "HPercent Threshold",
+		[CN] = "生命值百分比",
     },
     ["optionCursor"] = {
     	[RU] = "Двигаться к курсору если нет врага в комбо", 
     	[EN] = "Move to cursor if no enemy in combo",
+		[CN] = "无目标时移动到鼠标",
     },
     ["optionAutoRoarInitiation"] = {
     	[RU] = "Анти-Инициация",
     	[EN] = "Anti-Initiation",
+		[CN] = "Anti-Initiation",
     },
     ["optionAutoMidasB"] = {
     	[RU] = "Авто-Мидас",
     	[EN] = "Auto-Midas",
+		[CN] = "Auto-Midas",
     },
     ["optionBearGuard"] = {
     	[RU] = "Защита Медведем", 
     	[EN] = "Bear Guard",
+		[CN] = "Bear Guard",
     },
     ["optionBearGuardKey"] = {
     	[RU] = "Кнопка переключения On/Off",
     	[EN] = "Toggle Key On/Off",
+		[CN] = "Toggle Key On/Off",
     },
     ["optionMomGuard"] = {
     	[RU] = "MoM при атаках",
     	[EN] = "MoM when attacking",
+		[CN] = "MoM when attacking",
     },
     ["optionTpGuard"] = {
     	[RU] = "Авто-телепорт, если медведь далеко",
     	[EN] = "Auto-teleport if the bear is far away",
+		[CN] = "Auto-teleport if the bear is far away",
     },
     ["optionBot"] = {
     	[RU] = "Включение Бота",
     	[EN] = "Enable Bot",
+		[CN] = "Enable Bot",
     },
 }
 
@@ -169,6 +197,17 @@ if language == RU then
     druidPath = {rootPath, "Lone Druid", "Друид"}
     roarPath = {rootPath, "Lone Druid", "Roar"}
     botPath = {rootPath, "Lone Druid", "Бот для Мишки"}
+end 
+
+if language == CN then
+    rootPath = "独立英雄脚本"
+    mainPath = {rootPath, "Lone Druid"}
+    bearPath = {rootPath, "Lone Druid", "Bear"}
+    particlePath = {rootPath, "Lone Druid", "Target of attack"}
+    itemPathB = {rootPath, "Lone Druid", "Bear", "物品"}
+    druidPath = {rootPath, "Lone Druid", "Druid"}
+    roarPath = {rootPath, "Lone Druid", "Roar"}
+	botPath = {rootPath, "Lone Druid", "Bot for Bear"}
 end 
 ------------------------------------------------------------------------------------------------------------------------------------------------------------
 
