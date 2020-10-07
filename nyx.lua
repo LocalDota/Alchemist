@@ -82,12 +82,12 @@ local Translation = {
     ["optionCarapaseDis"] = {
     	[RU] = "Анти-Инициация",
     	[EN] = "Anti-Initiation",
-		[EN] = "Anti-Initiation",
+		[CN] = "Anti-Initiation",
     },
     ["optionVendetta"] = {
     	[RU] = "Атака из Vendetta",
     	[EN] = "Attack from Vendetta",
-		[EN] = "",
+		[CN] = "Attack from Vendetta",
     },
 }
 
