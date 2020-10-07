@@ -165,6 +165,9 @@ Menu.AddOptionIcon(Nyx.optionBloodthorn, "panorama/images/items/".."bloodthorn".
 Nyx.optionOrchidMalevolence = Menu.AddOptionBool(itemsPath, "Orchid Malevolence", true)
 Menu.AddOptionIcon(Nyx.optionOrchidMalevolence, "panorama/images/items/".."orchid".."_png.vtex_c")
 
+Nyx.optionMeteorHammer = Menu.AddOptionBool(itemsPath, "Meteor Hammer", true)
+Menu.AddOptionIcon(Nyx.optionMeteorHammer, "panorama/images/items/".."meteor_hammer".."_png.vtex_c")
+
 Nyx.optionShivasGuard = Menu.AddOptionBool(itemsPath, "Shivas Guard", true)
 Menu.AddOptionIcon(Nyx.optionShivasGuard, "panorama/images/items/".."shivas_guard".."_png.vtex_c")
 
@@ -279,6 +282,8 @@ function Nyx.OnUpdate()
    			end	
  		end
 	end
+
+	local meteor = NPC.GetItem(myHero, "item_meteor_hammer")
 --------------------------------------------------------------------------------
 
 
@@ -301,9 +306,11 @@ function Nyx.OnUpdate()
 		end
 	end	
 
+	
+
 
 	--Анти-врыв
-	if Menu.IsEnabled(Nyx.optionCarapaseDis) and blinked[#blinked] and blinked[#blinked].unit and  blinked[#blinked].time and ((Entity.GetOrigin(myHero) - (Entity.GetOrigin(blinked[#blinked].unit))):Length2D()) < 700 and (GameRules.GetGameTime() - blinked[#blinked].time) < 0.1 and (blinked[#blinked].unit ~= myHero)  then
+	if Menu.IsEnabled(Nyx.optionCarapaseDis) and blinked[#blinked] and blinked[#blinked].unit and  blinked[#blinked].time and ((Entity.GetOrigin(myHero) - (Entity.GetOrigin(blinked[#blinked].unit))):Length2D()) < 700 and (GameRules.GetGameTime() - blinked[#blinked].time) < 0.1 and (blinked[#blinked].unit ~= myHero) and (not Entity.IsSameTeam(myHero, blinked[#blinked].unit))  then
 		if Ability.IsReady(carapace) and Ability.IsCastable(carapace, mana) then
     		Ability.CastNoTarget(carapace)
     	end	
@@ -311,7 +318,7 @@ function Nyx.OnUpdate()
 
 --Полное комбо
 
-	if Menu.IsKeyDown(Nyx.optionFullCombo) and enemy then
+	if Menu.IsKeyDown(Nyx.optionFullCombo) and enemy and (not NPC.GetModifier(myHero, "modifier_nyx_assassin_burrow")) and (not Ability.IsChannelling(meteor)) then
 
 		if Nyx.SleepReady(orderDelay, lastMoveOrder) then
 			Player.AttackTarget(myPlayer, myHero, enemy)
@@ -364,12 +371,16 @@ function Nyx.OnUpdate()
 			return
 		end
 
-		if Menu.IsEnabled(Nyx.optionDagon) and Nyx.ItemTarget(dagon, enemy, mana) == true then
+		position =  Nyx.GetPredictedPosition(enemy, 1)
+		if Nyx.Impale(impale, position, mana) == true then
 			return
 		end
 
-		position =  Nyx.GetPredictedPosition(enemy, 1)
-		if Nyx.Impale(impale, position, mana) == true then
+		if Menu.IsEnabled(Nyx.optionMeteorHammer) and Nyx.ItemOrigin(meteor, Entity.GetAbsOrigin(enemy), mana) == true then
+			return
+		end
+
+		if Menu.IsEnabled(Nyx.optionDagon) and Nyx.ItemTarget(dagon, enemy, mana) == true then
 			return
 		end
 
@@ -399,7 +410,94 @@ function Nyx.OnUpdate()
 		if Menu.IsEnabled(Nyx.optionCarapase) and Nyx.Carapace(carapace, mana) == true then
 			return
 		end
-	end	
+	end
+
+
+
+--Полное комбо под землёй
+	if Menu.IsKeyDown(Nyx.optionFullCombo) and enemy and NPC.GetModifier(myHero, "modifier_nyx_assassin_burrow") and (not Ability.IsChannelling(meteor)) then
+
+		if NPC.IsLinkensProtected(enemy) then
+
+			if Menu.IsEnabled(Nyx.optionBurnL) then
+				if Nyx.Burn(burn, mana, enemy) == true then
+					return
+				end
+			end	
+
+			if Menu.IsEnabled(Nyx.optionDagonL) then
+				if Nyx.ItemTarget(dagon, enemy, mana) == true then
+					return
+				end
+			end
+
+			if Menu.IsEnabled(Nyx.optionOrchidMalevolenceL) then
+				if Nyx.ItemTarget(orchid, enemy, mana) == true then
+					return
+				end
+			end		
+		end	
+
+		position =  Nyx.GetPredictedPosition(enemy, 1)
+		if Nyx.Impale(impale, position, mana) == true then
+			return
+		end
+
+		if Menu.IsEnabled(Nyx.optionMeteorHammer) and (Ability.GetCastRange(meteor) > ((Entity.GetOrigin(myHero) - (Entity.GetOrigin(enemy))):Length2D())) and Nyx.ItemOrigin(meteor, Entity.GetAbsOrigin(enemy), mana) == true then
+			return
+		end
+
+		if Nyx.Burn(burn, mana, enemy) == true then
+			return
+		end				
+
+		if Menu.IsEnabled(Nyx.optionSheepStick) and Nyx.ItemTarget(sheepstick, enemy, mana) == true then
+			return
+		end
+
+		if Menu.IsEnabled(Nyx.optionBloodthorn) and Nyx.ItemTarget(bloodthorn, enemy, mana) == true then
+			return
+		end
+
+		if  Menu.IsEnabled(Nyx.optionOrchidMalevolence) and Nyx.ItemTarget(orchid, enemy, mana) == true then
+			return
+		end
+
+		if Menu.IsEnabled(Nyx.optionVeilOfDiscord) and Nyx.ItemOrigin(veilofdiscord, Entity.GetAbsOrigin(enemy), mana) == true then
+			return
+		end
+
+		if Menu.IsEnabled(Nyx.optionEthereal) and Nyx.ItemTarget(etherealblade, enemy, mana) == true then
+			return
+		end
+
+		if Menu.IsEnabled(Nyx.optionDagon) and Nyx.ItemTarget(dagon, enemy, mana) == true then
+			return
+		end
+
+		if Menu.IsEnabled(Nyx.optionShivasGuard) and  Nyx.ItemNoTarget(shivasguard, mana) == true then
+			return
+		end
+
+
+	
+		if  Menu.IsEnabled(Nyx.optionLotusOrb) and  Nyx.ItemTarget(lotusorb, myHero, mana) == true then
+			return
+		end
+	
+
+		if Menu.IsEnabled(Nyx.optionBlackKingBar) and Nyx.ItemNoTarget(blackkingbar, mana) == true then
+			return
+		end
+
+		if Menu.IsEnabled(Nyx.optionBladeMail) and Nyx.ItemNoTarget(blademail, mana) == true then
+			return
+		end
+
+		if Menu.IsEnabled(Nyx.optionCarapase) and Nyx.Carapace(carapace, mana) == true then
+			return
+		end
+	end		
 -------------------------------------------------------------------------------	
 end
 
