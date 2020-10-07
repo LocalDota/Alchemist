@@ -310,7 +310,7 @@ function Nyx.OnUpdate()
 
 
 	--Анти-врыв
-	if Menu.IsEnabled(Nyx.optionCarapaseDis) and blinked[#blinked] and blinked[#blinked].unit and  blinked[#blinked].time and ((Entity.GetOrigin(myHero) - (Entity.GetOrigin(blinked[#blinked].unit))):Length2D()) < 700 and (GameRules.GetGameTime() - blinked[#blinked].time) < 0.1 and (blinked[#blinked].unit ~= myHero) and (not Entity.IsSameTeam(myHero, blinked[#blinked].unit))  then
+	if Menu.IsEnabled(Nyx.optionCarapaseDis) and blinked[#blinked] and blinked[#blinked].unit and  blinked[#blinked].time and ((Entity.GetOrigin(myHero) - (Entity.GetOrigin(blinked[#blinked].unit))):Length2D()) < 700 and (GameRules.GetGameTime() - blinked[#blinked].time) < 0.1 and (not Entity.IsSameTeam(myHero, blinked[#blinked].unit))  then
 		if Ability.IsReady(carapace) and Ability.IsCastable(carapace, mana) then
     		Ability.CastNoTarget(carapace)
     	end	
