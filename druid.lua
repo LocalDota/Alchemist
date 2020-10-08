@@ -578,7 +578,7 @@ function Druid.OnUpdate()
 		local nearestHero = Druid.FindNearestHero(myHero) 
 		local InRadius = #Entity.GetHeroesInRadius(myHero, 375, Enum.TeamType.TEAM_ENEMY)
 		--Анти-врыв
-		if Menu.IsEnabled(Druid.optionAutoRoarInitiation) and blinked[#blinked] and blinked[#blinked].unit and  blinked[#blinked].time and ((Entity.GetOrigin(myHero) - (Entity.GetOrigin(blinked[#blinked].unit))):Length2D()) < 375 and (GameRules.GetGameTime() - blinked[#blinked].time) < 0.1  then
+		if Menu.IsEnabled(Druid.optionAutoRoarInitiation) and blinked[#blinked] and blinked[#blinked].unit and  blinked[#blinked].time and ((Entity.GetOrigin(myHero) - (Entity.GetOrigin(blinked[#blinked].unit))):Length2D()) < 375 and (GameRules.GetGameTime() - blinked[#blinked].time) < 0.1 and (not Entity.IsSameTeam(myHero, blinked[#blinked].unit))  then
 			Druid.AutoRoar(roar, mana)
 		end	
 
