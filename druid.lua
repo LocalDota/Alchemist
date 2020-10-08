@@ -557,7 +557,7 @@ function Druid.OnUpdate()
 			end		
 		end
 		if Menu.IsEnabled(Druid.optionTpGuard) and bear	then
-			if ((Entity.GetOrigin(bear) - Entity.GetOrigin(myHero)):Length2D()) > 3000 and Druid.AutoReturn(autoreturn, manaB) == true then
+			if ((Entity.GetOrigin(bear) - Entity.GetOrigin(myHero)):Length2D()) > 3000 and Entity.IsAlive(bear) and Druid.AutoReturn(autoreturn, manaB) == true then
 				return
 			end
 		end
