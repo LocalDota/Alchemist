@@ -303,125 +303,245 @@ function Elder.OnUpdate()
 --Полное комбо
 
 	if Menu.IsKeyDown(Elder.optionFullCombo) and enemy and (not NPC.IsChannellingAbility(myHero)) then
+		if meteor then
+			if (not Ability.IsChannelling(meteor)) then
+				if Elder.SleepReady(orderDelay, lastMoveOrder) then
+					Player.AttackTarget(myPlayer, myHero, enemy)
+					lastMoveOrder = os.clock()
+				end	
 
-		if Elder.SleepReady(orderDelay, lastMoveOrder) then
-			Player.AttackTarget(myPlayer, myHero, enemy)
-			lastMoveOrder = os.clock()
-		end	
+				local distance = ((Entity.GetOrigin(myHero) - (Entity.GetOrigin(enemy))):Length2D())
+				position =  Elder.GetPredictedPosition(enemy, 1)
+				if Elder.Blink(blink, position, distance, mana) == true then
+					return
+				end
+				position =  Elder.GetPredictedPosition(enemy, 1.8)
+				if Elder.Astral(astral, position, distance, mana) == true then
+					return
+				end
 
-		local distance = ((Entity.GetOrigin(myHero) - (Entity.GetOrigin(enemy))):Length2D())
-		position =  Elder.GetPredictedPosition(enemy, 1)
-		if Elder.Blink(blink, position, distance, mana) == true then
-			return
-		end
-		position =  Elder.GetPredictedPosition(enemy, 1.8)
-		if Elder.Astral(astral, position, distance, mana) == true then
-			return
-		end
+				if Menu.IsEnabled(Elder.optionSheepStick) and Elder.ItemTarget(sheepstick, enemy, mana) == true then
+					return
+				end	
 
-		if Menu.IsEnabled(Elder.optionSheepStick) and Elder.ItemTarget(sheepstick, enemy, mana) == true then
-			return
-		end	
+				if  Menu.IsEnabled(Elder.optionAtos) and Elder.ItemTarget(atos, enemy, mana) == true then
+					return
+				end
 
-		if  Menu.IsEnabled(Elder.optionAtos) and Elder.ItemTarget(atos, enemy, mana) == true then
-			return
-		end
+				if Elder.Echo(echo, mana) == true then
+					return
+				end	
 
-		if Elder.Echo(echo, mana) == true then
-			return
-		end	
+				position =  Elder.GetPredictedPosition(enemy, 0.5)
+				if Elder.Splitter(splitter, position, distance, mana) == true then
+					return
+				end		
 
-		position =  Elder.GetPredictedPosition(enemy, 0.5)
-		if Elder.Splitter(splitter, position, distance, mana) == true then
-			return
-		end		
+				if Menu.IsEnabled(Elder.optionBloodthorn) and Elder.ItemTarget(bloodthorn, enemy, mana) == true then
+					return
+				end
 
-		if Menu.IsEnabled(Elder.optionBloodthorn) and Elder.ItemTarget(bloodthorn, enemy, mana) == true then
-			return
-		end
+				if  Menu.IsEnabled(Elder.optionOrchidMalevolence) and Elder.ItemTarget(orchid, enemy, mana) == true then
+					return
+				end
 
-		if  Menu.IsEnabled(Elder.optionOrchidMalevolence) and Elder.ItemTarget(orchid, enemy, mana) == true then
-			return
-		end
+				if Menu.IsEnabled(Elder.optionMeteorHammer) and Elder.ItemOrigin(meteor, Entity.GetAbsOrigin(enemy), mana) == true then
+					return
+				end
 
-		if Menu.IsEnabled(Elder.optionMeteorHammer) and Elder.ItemOrigin(meteor, Entity.GetAbsOrigin(enemy), mana) == true then
-			return
-		end
-
-		if Menu.IsEnabled(Elder.optionShivasGuard) and  Elder.ItemNoTarget(shivasguard, mana) == true then
-			return
-		end
-	
-		if Menu.IsEnabled(Elder.optionMjollnir) and Elder.ItemTarget(mjollnir, myHero, mana) == true then
-			return
-		end
+				if Menu.IsEnabled(Elder.optionShivasGuard) and  Elder.ItemNoTarget(shivasguard, mana) == true then
+					return
+				end
+			
+				if Menu.IsEnabled(Elder.optionMjollnir) and Elder.ItemTarget(mjollnir, myHero, mana) == true then
+					return
+				end
 
 
-		if satanic and (100/(Entity.GetMaxHealth(myHero)/Entity.GetHealth(myHero))) < Menu.GetValue(Elder.optionSatanicSlider) then
-			if Menu.IsEnabled(Elder.optionSatanic) and  Elder.ItemNoTarget(satanic, mana) == true then
+				if satanic and (100/(Entity.GetMaxHealth(myHero)/Entity.GetHealth(myHero))) < Menu.GetValue(Elder.optionSatanicSlider) then
+					if Menu.IsEnabled(Elder.optionSatanic) and  Elder.ItemNoTarget(satanic, mana) == true then
+						return
+					end
+				end	
+
+
+			
+				if  Menu.IsEnabled(Elder.optionLotusOrb) and  Elder.ItemTarget(lotusorb, myHero, mana) == true then
+					return
+				end
+
+				if Menu.IsEnabled(Elder.optionCrimson) and Elder.ItemNoTarget(crimson, mana) == true then
+					return
+				end	
+			
+
+				if Menu.IsEnabled(Elder.optionBlackKingBar) and Elder.ItemNoTarget(blackkingbar, mana) == true then
+					return
+				end
+
+				if Menu.IsEnabled(Elder.optionBladeMail) and Elder.ItemNoTarget(blademail, mana) == true then
+					return
+				end
+
+				if Menu.IsEnabled(Elder.optionReturnSpirit) and Ability.IsReady(returnSpirit) and Ability.IsCastable(returnSpirit, mana) then
+					Ability.CastNoTarget(returnSpirit)
+				end
+
+				if Menu.IsEnabled(Elder.optionRefresherOrb) and Elder.ItemNoTarget(refresher, mana) == true then
+					return
+				end
+			end	
+		else
+			if Elder.SleepReady(orderDelay, lastMoveOrder) then
+				Player.AttackTarget(myPlayer, myHero, enemy)
+				lastMoveOrder = os.clock()
+			end	
+
+			local distance = ((Entity.GetOrigin(myHero) - (Entity.GetOrigin(enemy))):Length2D())
+			position =  Elder.GetPredictedPosition(enemy, 1)
+			if Elder.Blink(blink, position, distance, mana) == true then
 				return
 			end
-		end	
+			position =  Elder.GetPredictedPosition(enemy, 1.8)
+			if Elder.Astral(astral, position, distance, mana) == true then
+				return
+			end
+
+			if Menu.IsEnabled(Elder.optionSheepStick) and Elder.ItemTarget(sheepstick, enemy, mana) == true then
+				return
+			end	
+
+			if  Menu.IsEnabled(Elder.optionAtos) and Elder.ItemTarget(atos, enemy, mana) == true then
+				return
+			end
+
+			if Elder.Echo(echo, mana) == true then
+				return
+			end	
+
+			position =  Elder.GetPredictedPosition(enemy, 0.5)
+			if Elder.Splitter(splitter, position, distance, mana) == true then
+				return
+			end		
+
+			if Menu.IsEnabled(Elder.optionBloodthorn) and Elder.ItemTarget(bloodthorn, enemy, mana) == true then
+				return
+			end
+
+			if  Menu.IsEnabled(Elder.optionOrchidMalevolence) and Elder.ItemTarget(orchid, enemy, mana) == true then
+				return
+			end
+
+			if Menu.IsEnabled(Elder.optionMeteorHammer) and Elder.ItemOrigin(meteor, Entity.GetAbsOrigin(enemy), mana) == true then
+				return
+			end
+
+			if Menu.IsEnabled(Elder.optionShivasGuard) and  Elder.ItemNoTarget(shivasguard, mana) == true then
+				return
+			end
+		
+			if Menu.IsEnabled(Elder.optionMjollnir) and Elder.ItemTarget(mjollnir, myHero, mana) == true then
+				return
+			end
 
 
-	
-		if  Menu.IsEnabled(Elder.optionLotusOrb) and  Elder.ItemTarget(lotusorb, myHero, mana) == true then
-			return
-		end
+			if satanic and (100/(Entity.GetMaxHealth(myHero)/Entity.GetHealth(myHero))) < Menu.GetValue(Elder.optionSatanicSlider) then
+				if Menu.IsEnabled(Elder.optionSatanic) and  Elder.ItemNoTarget(satanic, mana) == true then
+					return
+				end
+			end	
 
-		if Menu.IsEnabled(Elder.optionCrimson) and Elder.ItemNoTarget(crimson, mana) == true then
-			return
-		end	
-	
 
-		if Menu.IsEnabled(Elder.optionBlackKingBar) and Elder.ItemNoTarget(blackkingbar, mana) == true then
-			return
-		end
+		
+			if  Menu.IsEnabled(Elder.optionLotusOrb) and  Elder.ItemTarget(lotusorb, myHero, mana) == true then
+				return
+			end
 
-		if Menu.IsEnabled(Elder.optionBladeMail) and Elder.ItemNoTarget(blademail, mana) == true then
-			return
-		end
+			if Menu.IsEnabled(Elder.optionCrimson) and Elder.ItemNoTarget(crimson, mana) == true then
+				return
+			end	
+		
 
-		if Menu.IsEnabled(Elder.optionReturnSpirit) and Ability.IsReady(returnSpirit) and Ability.IsCastable(returnSpirit, mana) then
-			Ability.CastNoTarget(returnSpirit)
-		end
+			if Menu.IsEnabled(Elder.optionBlackKingBar) and Elder.ItemNoTarget(blackkingbar, mana) == true then
+				return
+			end
 
-		if Menu.IsEnabled(Elder.optionRefresherOrb) and Elder.ItemNoTarget(refresher, mana) == true then
-			return
-		end	
+			if Menu.IsEnabled(Elder.optionBladeMail) and Elder.ItemNoTarget(blademail, mana) == true then
+				return
+			end
+
+			if Menu.IsEnabled(Elder.optionReturnSpirit) and Ability.IsReady(returnSpirit) and Ability.IsCastable(returnSpirit, mana) then
+				Ability.CastNoTarget(returnSpirit)
+			end
+
+			if Menu.IsEnabled(Elder.optionRefresherOrb) and Elder.ItemNoTarget(refresher, mana) == true then
+				return
+			end
+		end				
 	end
 
 
 
 --Второе комбо
 	if Menu.IsKeyDown(Elder.optionCombo2) and enemy and (not NPC.IsChannellingAbility(myHero)) then
+		if meteor then
+			if (not Ability.IsChannelling(meteor)) then
 
-		if Elder.SleepReady(orderDelay2, lastMoveOrder2) then
-			Player.AttackTarget(myPlayer, myHero, enemy)
-			lastMoveOrder2 = os.clock()
-		end
+				if Elder.SleepReady(orderDelay2, lastMoveOrder2) then
+					Player.AttackTarget(myPlayer, myHero, enemy)
+					lastMoveOrder2 = os.clock()
+				end
 
-		local distance = ((Entity.GetOrigin(myHero) - (Entity.GetOrigin(enemy))):Length2D())
-		if Elder.Blink(blink, Entity.GetAbsOrigin(enemy), distance, mana) == true then
-			return
-		end	
+				local distance = ((Entity.GetOrigin(myHero) - (Entity.GetOrigin(enemy))):Length2D())
+				if Elder.Blink(blink, Entity.GetAbsOrigin(enemy), distance, mana) == true then
+					return
+				end	
 
-		position =  Elder.GetPredictedPosition(enemy, 1.8)
-		if Elder.Astral(astral, position, distance, mana) == true then
-			return
-		end
+				position =  Elder.GetPredictedPosition(enemy, 1.8)
+				if Elder.Astral(astral, position, distance, mana) == true then
+					return
+				end
 
-		if Elder.Echo(echo, mana) == true then
-			return
-		end	
+				if Elder.Echo(echo, mana) == true then
+					return
+				end	
 
-		if Menu.IsEnabled(Elder.optionMeteorHammer) and Elder.ItemOrigin(meteor, Entity.GetAbsOrigin(enemy), mana) == true then
-			return
-		end
+				if Menu.IsEnabled(Elder.optionMeteorHammer) and Elder.ItemOrigin(meteor, Entity.GetAbsOrigin(enemy), mana) == true then
+					return
+				end
 
-		if Menu.IsEnabled(Elder.optionReturnSpirit) and Ability.IsReady(returnSpirit) and Ability.IsCastable(returnSpirit, mana) then
-			Ability.CastNoTarget(returnSpirit)
-		end
+				if Menu.IsEnabled(Elder.optionReturnSpirit) and Ability.IsReady(returnSpirit) and Ability.IsCastable(returnSpirit, mana) then
+					Ability.CastNoTarget(returnSpirit)
+				end
+			end	
+		else
+			if Elder.SleepReady(orderDelay2, lastMoveOrder2) then
+				Player.AttackTarget(myPlayer, myHero, enemy)
+				lastMoveOrder2 = os.clock()
+			end
+
+			local distance = ((Entity.GetOrigin(myHero) - (Entity.GetOrigin(enemy))):Length2D())
+			if Elder.Blink(blink, Entity.GetAbsOrigin(enemy), distance, mana) == true then
+				return
+			end	
+
+			position =  Elder.GetPredictedPosition(enemy, 1.8)
+			if Elder.Astral(astral, position, distance, mana) == true then
+				return
+			end
+
+			if Elder.Echo(echo, mana) == true then
+				return
+			end	
+
+			if Menu.IsEnabled(Elder.optionMeteorHammer) and Elder.ItemOrigin(meteor, Entity.GetAbsOrigin(enemy), mana) == true then
+				return
+			end
+
+			if Menu.IsEnabled(Elder.optionReturnSpirit) and Ability.IsReady(returnSpirit) and Ability.IsCastable(returnSpirit, mana) then
+				Ability.CastNoTarget(returnSpirit)
+			end
+		end		
 	end		
 -------------------------------------------------------------------------------			
 end
