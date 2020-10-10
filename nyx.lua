@@ -318,185 +318,356 @@ function Nyx.OnUpdate()
 
 --Полное комбо
 
-	if Menu.IsKeyDown(Nyx.optionFullCombo) and enemy and (not NPC.GetModifier(myHero, "modifier_nyx_assassin_burrow")) and (not Ability.IsChannelling(meteor)) then
+	if Menu.IsKeyDown(Nyx.optionFullCombo) and enemy and (not NPC.GetModifier(myHero, "modifier_nyx_assassin_burrow")) then 
+		if meteor then 
 
-		if Nyx.SleepReady(orderDelay, lastMoveOrder) then
-			Player.AttackTarget(myPlayer, myHero, enemy)
-			lastMoveOrder = os.clock()
-		end
-
-		local distance = ((Entity.GetOrigin(myHero) - (Entity.GetOrigin(enemy))):Length2D())
-		if Menu.IsEnabled(Nyx.optionVendetta) and Nyx.Vendetta(vendetta, mana, myHero, myPlayer, enemy, distance) == true then
-			return
-		end
-
-		if NPC.IsLinkensProtected(enemy) then
-
-			if Menu.IsEnabled(Nyx.optionBurnL) then
-				if Nyx.Burn(burn, mana, enemy) == true then
-					return
-				end
-			end	
-
-			if Menu.IsEnabled(Nyx.optionDagonL) then
-				if Nyx.ItemTarget(dagon, enemy, mana) == true then
-					return
-				end
+			if Nyx.SleepReady(orderDelay, lastMoveOrder) and (not Ability.IsChannelling(meteor))  then
+				Player.AttackTarget(myPlayer, myHero, enemy)
+				lastMoveOrder = os.clock()
 			end
 
-			if Menu.IsEnabled(Nyx.optionOrchidMalevolenceL) then
-				if Nyx.ItemTarget(orchid, enemy, mana) == true then
-					return
+			local distance = ((Entity.GetOrigin(myHero) - (Entity.GetOrigin(enemy))):Length2D())
+			if Menu.IsEnabled(Nyx.optionVendetta) and (not Ability.IsChannelling(meteor)) and Nyx.Vendetta(vendetta, mana, myHero, myPlayer, enemy, distance) == true then
+				return
+			end
+
+			if NPC.IsLinkensProtected(enemy) then
+
+				if Menu.IsEnabled(Nyx.optionBurnL) and (not Ability.IsChannelling(meteor)) then
+					if Nyx.Burn(burn, mana, enemy) == true then
+						return
+					end
+				end	
+
+				if Menu.IsEnabled(Nyx.optionDagonL) and (not Ability.IsChannelling(meteor)) then
+					if Nyx.ItemTarget(dagon, enemy, mana) == true then
+						return
+					end
 				end
-			end		
-		end					
 
-		if Menu.IsEnabled(Nyx.optionSheepStick) and Nyx.ItemTarget(sheepstick, enemy, mana) == true then
-			return
-		end
+				if Menu.IsEnabled(Nyx.optionOrchidMalevolenceL) and (not Ability.IsChannelling(meteor)) then
+					if Nyx.ItemTarget(orchid, enemy, mana) == true then
+						return
+					end
+				end		
+			end					
 
-		if Menu.IsEnabled(Nyx.optionBloodthorn) and Nyx.ItemTarget(bloodthorn, enemy, mana) == true then
-			return
-		end
+			if Menu.IsEnabled(Nyx.optionSheepStick) and (not Ability.IsChannelling(meteor)) and Nyx.ItemTarget(sheepstick, enemy, mana) == true then
+				return
+			end
 
-		if  Menu.IsEnabled(Nyx.optionOrchidMalevolence) and Nyx.ItemTarget(orchid, enemy, mana) == true then
-			return
-		end
+			if Menu.IsEnabled(Nyx.optionBloodthorn) and (not NPC.GetModifier(enemy, "modifier_bloodthorn_debuff")) and (not Ability.IsChannelling(meteor)) and Nyx.ItemTarget(bloodthorn, enemy, mana) == true then
+				return
+			end
 
-		if Menu.IsEnabled(Nyx.optionVeilOfDiscord) and Nyx.ItemOrigin(veilofdiscord, Entity.GetAbsOrigin(enemy), mana) == true then
-			return
-		end
+			if  Menu.IsEnabled(Nyx.optionOrchidMalevolence) and (not NPC.GetModifier(enemy, "modifier_orchid_malevolence_debuff")) and (not Ability.IsChannelling(meteor)) and Nyx.ItemTarget(orchid, enemy, mana) == true then
+				return
+			end
 
-		if Menu.IsEnabled(Nyx.optionEthereal) and Nyx.ItemTarget(etherealblade, enemy, mana) == true then
-			return
-		end
+			if Menu.IsEnabled(Nyx.optionVeilOfDiscord) and (not Ability.IsChannelling(meteor)) and  Nyx.ItemOrigin(veilofdiscord, Entity.GetAbsOrigin(enemy), mana) == true then
+				return
+			end
 
-		position =  Nyx.GetPredictedPosition(enemy, 1)
-		if Nyx.Impale(impale, position, mana) == true then
-			return
-		end
+			if Menu.IsEnabled(Nyx.optionEthereal) and (not Ability.IsChannelling(meteor)) and Nyx.ItemTarget(etherealblade, enemy, mana) == true then
+				return
+			end
 
-		if Menu.IsEnabled(Nyx.optionMeteorHammer) and Nyx.ItemOrigin(meteor, Entity.GetAbsOrigin(enemy), mana) == true then
-			return
-		end
+			position =  Nyx.GetPredictedPosition(enemy, 1)
+			if (not Ability.IsChannelling(meteor)) and Nyx.Impale(impale, position, mana) == true then
+				return
+			end
 
-		if Menu.IsEnabled(Nyx.optionDagon) and Nyx.ItemTarget(dagon, enemy, mana) == true then
-			return
-		end
+			if Menu.IsEnabled(Nyx.optionMeteorHammer) and (not Ability.IsChannelling(meteor)) and Nyx.ItemOrigin(meteor, Entity.GetAbsOrigin(enemy), mana) == true then
+				return
+			end
 
-		if Menu.IsEnabled(Nyx.optionShivasGuard) and  Nyx.ItemNoTarget(shivasguard, mana) == true then
-			return
-		end
+			if Menu.IsEnabled(Nyx.optionDagon) and (not Ability.IsChannelling(meteor)) and Nyx.ItemTarget(dagon, enemy, mana) == true then
+				return
+			end
 
-		if Nyx.Burn(burn, mana, enemy) == true then
-			return
-		end
+			if Menu.IsEnabled(Nyx.optionShivasGuard) and (not Ability.IsChannelling(meteor)) and  Nyx.ItemNoTarget(shivasguard, mana) == true then
+				return
+			end
+
+			if (not Ability.IsChannelling(meteor)) and Nyx.Burn(burn, mana, enemy) == true then
+				return
+			end
 
 
-	
-		if  Menu.IsEnabled(Nyx.optionLotusOrb) and  Nyx.ItemTarget(lotusorb, myHero, mana) == true then
-			return
-		end
-	
+		
+			if  Menu.IsEnabled(Nyx.optionLotusOrb) and (not Ability.IsChannelling(meteor)) and  Nyx.ItemTarget(lotusorb, myHero, mana) == true then
+				return
+			end
+		
 
-		if Menu.IsEnabled(Nyx.optionBlackKingBar) and Nyx.ItemNoTarget(blackkingbar, mana) == true then
-			return
-		end
+			if Menu.IsEnabled(Nyx.optionBlackKingBar) and (not Ability.IsChannelling(meteor)) and Nyx.ItemNoTarget(blackkingbar, mana) == true then
+				return
+			end
 
-		if Menu.IsEnabled(Nyx.optionBladeMail) and Nyx.ItemNoTarget(blademail, mana) == true then
-			return
-		end
+			if Menu.IsEnabled(Nyx.optionBladeMail) and (not Ability.IsChannelling(meteor)) and Nyx.ItemNoTarget(blademail, mana) == true then
+				return
+			end
 
-		if Menu.IsEnabled(Nyx.optionCarapase) and Nyx.Carapace(carapace, mana) == true then
-			return
-		end
+			if Menu.IsEnabled(Nyx.optionCarapase) and (not Ability.IsChannelling(meteor)) and Nyx.Carapace(carapace, mana) == true then
+				return
+			end
+		else
+			if Nyx.SleepReady(orderDelay, lastMoveOrder)  then
+				Player.AttackTarget(myPlayer, myHero, enemy)
+				lastMoveOrder = os.clock()
+			end
+
+			local distance = ((Entity.GetOrigin(myHero) - (Entity.GetOrigin(enemy))):Length2D())
+			if Menu.IsEnabled(Nyx.optionVendetta) and Nyx.Vendetta(vendetta, mana, myHero, myPlayer, enemy, distance) == true then
+				return
+			end
+
+			if NPC.IsLinkensProtected(enemy) then
+
+				if Menu.IsEnabled(Nyx.optionBurnL) then
+					if Nyx.Burn(burn, mana, enemy) == true then
+						return
+					end
+				end	
+
+				if Menu.IsEnabled(Nyx.optionDagonL) then
+					if Nyx.ItemTarget(dagon, enemy, mana) == true then
+						return
+					end
+				end
+
+				if Menu.IsEnabled(Nyx.optionOrchidMalevolenceL) then
+					if Nyx.ItemTarget(orchid, enemy, mana) == true then
+						return
+					end
+				end		
+			end					
+
+			if Menu.IsEnabled(Nyx.optionSheepStick) and Nyx.ItemTarget(sheepstick, enemy, mana) == true then
+				return
+			end
+
+			if Menu.IsEnabled(Nyx.optionBloodthorn) and (not NPC.GetModifier(enemy, "modifier_bloodthorn_debuff")) and Nyx.ItemTarget(bloodthorn, enemy, mana) == true then
+				return
+			end
+
+			if  Menu.IsEnabled(Nyx.optionOrchidMalevolence) and (not NPC.GetModifier(enemy, "modifier_orchid_malevolence_debuff")) and Nyx.ItemTarget(orchid, enemy, mana) == true then
+				return
+			end
+
+			if Menu.IsEnabled(Nyx.optionVeilOfDiscord) and Nyx.ItemOrigin(veilofdiscord, Entity.GetAbsOrigin(enemy), mana) == true then
+				return
+			end
+
+			if Menu.IsEnabled(Nyx.optionEthereal) and Nyx.ItemTarget(etherealblade, enemy, mana) == true then
+				return
+			end
+
+			position =  Nyx.GetPredictedPosition(enemy, 1)
+			if Nyx.Impale(impale, position, mana) == true then
+				return
+			end
+
+			if Menu.IsEnabled(Nyx.optionMeteorHammer) and Nyx.ItemOrigin(meteor, Entity.GetAbsOrigin(enemy), mana) == true then
+				return
+			end
+
+			if Menu.IsEnabled(Nyx.optionDagon) and Nyx.ItemTarget(dagon, enemy, mana) == true then
+				return
+			end
+
+			if Menu.IsEnabled(Nyx.optionShivasGuard) and  Nyx.ItemNoTarget(shivasguard, mana) == true then
+				return
+			end
+
+			if Nyx.Burn(burn, mana, enemy) == true then
+				return
+			end
+
+
+		
+			if  Menu.IsEnabled(Nyx.optionLotusOrb) and  Nyx.ItemTarget(lotusorb, myHero, mana) == true then
+				return
+			end
+		
+
+			if Menu.IsEnabled(Nyx.optionBlackKingBar) and Nyx.ItemNoTarget(blackkingbar, mana) == true then
+				return
+			end
+
+			if Menu.IsEnabled(Nyx.optionBladeMail) and Nyx.ItemNoTarget(blademail, mana) == true then
+				return
+			end
+
+			if Menu.IsEnabled(Nyx.optionCarapase) and Nyx.Carapace(carapace, mana) == true then
+				return
+			end
+		end		
 	end
 
 
 
 --Полное комбо под землёй
-	if Menu.IsKeyDown(Nyx.optionFullCombo) and enemy and NPC.GetModifier(myHero, "modifier_nyx_assassin_burrow") and (not Ability.IsChannelling(meteor)) then
+	if Menu.IsKeyDown(Nyx.optionFullCombo) and enemy and NPC.GetModifier(myHero, "modifier_nyx_assassin_burrow") then 
+		if meteor then
+			if NPC.IsLinkensProtected(enemy) then
 
-		if NPC.IsLinkensProtected(enemy) then
+				if Menu.IsEnabled(Nyx.optionBurnL) and (not Ability.IsChannelling(meteor)) then
+					if Nyx.Burn(burn, mana, enemy) == true then
+						return
+					end
+				end	
 
-			if Menu.IsEnabled(Nyx.optionBurnL) then
-				if Nyx.Burn(burn, mana, enemy) == true then
-					return
+				if Menu.IsEnabled(Nyx.optionDagonL) and (not Ability.IsChannelling(meteor)) then
+					if Nyx.ItemTarget(dagon, enemy, mana) == true then
+						return
+					end
 				end
+
+				if Menu.IsEnabled(Nyx.optionOrchidMalevolenceL) and (not Ability.IsChannelling(meteor)) then
+					if Nyx.ItemTarget(orchid, enemy, mana) == true then
+						return
+					end
+				end		
 			end	
 
-			if Menu.IsEnabled(Nyx.optionDagonL) then
-				if Nyx.ItemTarget(dagon, enemy, mana) == true then
-					return
-				end
+			position =  Nyx.GetPredictedPosition(enemy, 1)
+			if (not Ability.IsChannelling(meteor)) and Nyx.Impale(impale, position, mana) == true then
+				return
 			end
 
-			if Menu.IsEnabled(Nyx.optionOrchidMalevolenceL) then
-				if Nyx.ItemTarget(orchid, enemy, mana) == true then
-					return
+			if Menu.IsEnabled(Nyx.optionMeteorHammer) and (not Ability.IsChannelling(meteor)) and (Ability.GetCastRange(meteor) > ((Entity.GetOrigin(myHero) - (Entity.GetOrigin(enemy))):Length2D())) and Nyx.ItemOrigin(meteor, Entity.GetAbsOrigin(enemy), mana) == true then
+				return
+			end
+
+			if (not Ability.IsChannelling(meteor)) and Nyx.Burn(burn, mana, enemy) == true then
+				return
+			end				
+
+			if Menu.IsEnabled(Nyx.optionSheepStick) and (not Ability.IsChannelling(meteor)) and Nyx.ItemTarget(sheepstick, enemy, mana) == true then
+				return
+			end
+
+			if Menu.IsEnabled(Nyx.optionBloodthorn) and (not NPC.GetModifier(enemy, "modifier_bloodthorn_debuff")) and (not Ability.IsChannelling(meteor)) and Nyx.ItemTarget(bloodthorn, enemy, mana) == true then
+				return
+			end
+
+			if  Menu.IsEnabled(Nyx.optionOrchidMalevolence) and (not NPC.GetModifier(enemy, "modifier_orchid_malevolence_debuff")) and (not Ability.IsChannelling(meteor)) and Nyx.ItemTarget(orchid, enemy, mana) == true then
+				return
+			end
+
+			if Menu.IsEnabled(Nyx.optionVeilOfDiscord) and (not Ability.IsChannelling(meteor)) and Nyx.ItemOrigin(veilofdiscord, Entity.GetAbsOrigin(enemy), mana) == true then
+				return
+			end
+
+			if Menu.IsEnabled(Nyx.optionEthereal) and (not Ability.IsChannelling(meteor)) and Nyx.ItemTarget(etherealblade, enemy, mana) == true then
+				return
+			end
+
+			if Menu.IsEnabled(Nyx.optionDagon) and (not Ability.IsChannelling(meteor)) and Nyx.ItemTarget(dagon, enemy, mana) == true then
+				return
+			end
+
+			if Menu.IsEnabled(Nyx.optionShivasGuard) and (not Ability.IsChannelling(meteor)) and  Nyx.ItemNoTarget(shivasguard, mana) == true then
+				return
+			end
+
+
+		
+			if  Menu.IsEnabled(Nyx.optionLotusOrb) and (not Ability.IsChannelling(meteor)) and  Nyx.ItemTarget(lotusorb, myHero, mana) == true then
+				return
+			end
+		
+
+			if Menu.IsEnabled(Nyx.optionBlackKingBar) and (not Ability.IsChannelling(meteor)) and Nyx.ItemNoTarget(blackkingbar, mana) == true then
+				return
+			end
+
+			if Menu.IsEnabled(Nyx.optionBladeMail) and (not Ability.IsChannelling(meteor)) and Nyx.ItemNoTarget(blademail, mana) == true then
+				return
+			end
+
+			if Menu.IsEnabled(Nyx.optionCarapase) and (not Ability.IsChannelling(meteor)) and Nyx.Carapace(carapace, mana) == true then
+				return
+			end
+		else
+			if NPC.IsLinkensProtected(enemy) then
+
+				if Menu.IsEnabled(Nyx.optionBurnL) then
+					if Nyx.Burn(burn, mana, enemy) == true then
+						return
+					end
+				end	
+
+				if Menu.IsEnabled(Nyx.optionDagonL) then
+					if Nyx.ItemTarget(dagon, enemy, mana) == true then
+						return
+					end
 				end
-			end		
-		end	
 
-		position =  Nyx.GetPredictedPosition(enemy, 1)
-		if Nyx.Impale(impale, position, mana) == true then
-			return
-		end
+				if Menu.IsEnabled(Nyx.optionOrchidMalevolenceL) then
+					if Nyx.ItemTarget(orchid, enemy, mana) == true then
+						return
+					end
+				end		
+			end	
 
-		if Menu.IsEnabled(Nyx.optionMeteorHammer) and (Ability.GetCastRange(meteor) > ((Entity.GetOrigin(myHero) - (Entity.GetOrigin(enemy))):Length2D())) and Nyx.ItemOrigin(meteor, Entity.GetAbsOrigin(enemy), mana) == true then
-			return
-		end
+			position =  Nyx.GetPredictedPosition(enemy, 1)
+			if Nyx.Impale(impale, position, mana) == true then
+				return
+			end
 
-		if Nyx.Burn(burn, mana, enemy) == true then
-			return
-		end				
+			if Nyx.Burn(burn, mana, enemy) == true then
+				return
+			end				
 
-		if Menu.IsEnabled(Nyx.optionSheepStick) and Nyx.ItemTarget(sheepstick, enemy, mana) == true then
-			return
-		end
+			if Menu.IsEnabled(Nyx.optionSheepStick) and Nyx.ItemTarget(sheepstick, enemy, mana) == true then
+				return
+			end
 
-		if Menu.IsEnabled(Nyx.optionBloodthorn) and Nyx.ItemTarget(bloodthorn, enemy, mana) == true then
-			return
-		end
+			if Menu.IsEnabled(Nyx.optionBloodthorn) and (not NPC.GetModifier(enemy, "modifier_bloodthorn_debuff")) and Nyx.ItemTarget(bloodthorn, enemy, mana) == true then
+				return
+			end
 
-		if  Menu.IsEnabled(Nyx.optionOrchidMalevolence) and Nyx.ItemTarget(orchid, enemy, mana) == true then
-			return
-		end
+			if  Menu.IsEnabled(Nyx.optionOrchidMalevolence) and (not NPC.GetModifier(enemy, "modifier_orchid_malevolence_debuff")) and Nyx.ItemTarget(orchid, enemy, mana) == true then
+				return
+			end
 
-		if Menu.IsEnabled(Nyx.optionVeilOfDiscord) and Nyx.ItemOrigin(veilofdiscord, Entity.GetAbsOrigin(enemy), mana) == true then
-			return
-		end
+			if Menu.IsEnabled(Nyx.optionVeilOfDiscord) and Nyx.ItemOrigin(veilofdiscord, Entity.GetAbsOrigin(enemy), mana) == true then
+				return
+			end
 
-		if Menu.IsEnabled(Nyx.optionEthereal) and Nyx.ItemTarget(etherealblade, enemy, mana) == true then
-			return
-		end
+			if Menu.IsEnabled(Nyx.optionEthereal) and Nyx.ItemTarget(etherealblade, enemy, mana) == true then
+				return
+			end
 
-		if Menu.IsEnabled(Nyx.optionDagon) and Nyx.ItemTarget(dagon, enemy, mana) == true then
-			return
-		end
+			if Menu.IsEnabled(Nyx.optionDagon) and Nyx.ItemTarget(dagon, enemy, mana) == true then
+				return
+			end
 
-		if Menu.IsEnabled(Nyx.optionShivasGuard) and  Nyx.ItemNoTarget(shivasguard, mana) == true then
-			return
-		end
+			if Menu.IsEnabled(Nyx.optionShivasGuard) and  Nyx.ItemNoTarget(shivasguard, mana) == true then
+				return
+			end
 
 
-	
-		if  Menu.IsEnabled(Nyx.optionLotusOrb) and  Nyx.ItemTarget(lotusorb, myHero, mana) == true then
-			return
-		end
-	
+		
+			if  Menu.IsEnabled(Nyx.optionLotusOrb) and  Nyx.ItemTarget(lotusorb, myHero, mana) == true then
+				return
+			end
+		
 
-		if Menu.IsEnabled(Nyx.optionBlackKingBar) and Nyx.ItemNoTarget(blackkingbar, mana) == true then
-			return
-		end
+			if Menu.IsEnabled(Nyx.optionBlackKingBar) and Nyx.ItemNoTarget(blackkingbar, mana) == true then
+				return
+			end
 
-		if Menu.IsEnabled(Nyx.optionBladeMail) and Nyx.ItemNoTarget(blademail, mana) == true then
-			return
-		end
+			if Menu.IsEnabled(Nyx.optionBladeMail) and Nyx.ItemNoTarget(blademail, mana) == true then
+				return
+			end
 
-		if Menu.IsEnabled(Nyx.optionCarapase) and Nyx.Carapace(carapace, mana) == true then
-			return
-		end
+			if Menu.IsEnabled(Nyx.optionCarapase) and Nyx.Carapace(carapace, mana) == true then
+				return
+			end
+		end		
 	end		
 -------------------------------------------------------------------------------	
 end
