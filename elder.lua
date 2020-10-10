@@ -83,14 +83,19 @@ local Translation = {
 		[CN] = "",
     },
     ["optionCombo2"] = {
-    	[RU] = "Комбо стан + метеор",
-    	[EN] = "Сombo stun + meteor",
+    	[RU] = "Комбо еул + стан + метеор",
+    	[EN] = "Сombo eul + stun + meteor",
 		[CN] = "",
     },
     ["optionBlink"] = {
     	[RU] = "Блинк в комбо",
     	[EN] = "Blink in combo",
 		[CN] = "",
+    },
+    ["optionCursor"] = {
+    	[RU] = "Двигаться к курсору если нет врага в комбо", 
+    	[EN] = "Move to cursor if no enemy in combo",
+		[CN] = "无目标时移动到鼠标",
     },
 }
 
@@ -135,7 +140,10 @@ Elder.optionFullCombo = Menu.AddKeyOption(mainPath, Translation.optionFullCombo[
 Menu.AddOptionIcon(Elder.optionFullCombo, "~/MenuIcons/enemy_evil.png")
 
 Elder.optionCombo2 = Menu.AddKeyOption(mainPath, Translation.optionCombo2[language], Enum.ButtonCode.KEY_NONE)
-Menu.AddOptionIcon(Elder.optionCombo2, "panorama/images/items/".."meteor_hammer".."_png.vtex_c")
+Menu.AddOptionIcon(Elder.optionCombo2, "panorama/images/items/".."cyclone".."_png.vtex_c")
+
+Elder.optionCursor = Menu.AddOptionBool(mainPath, Translation.optionCursor[language], true)
+Menu.AddOptionIcon(Elder.optionCursor, "~/MenuIcons/cursor.png")
 
 Elder.optionReturnSpirit = Menu.AddOptionBool(mainPath, Translation.optionReturnSpirit[language], false)
 Menu.AddOptionIcon(Elder.optionReturnSpirit, "panorama/images/spellicons/".."elder_titan_return_spirit".."_png.vtex_c")
@@ -281,9 +289,11 @@ function Elder.OnUpdate()
 
 	local blink = NPC.GetItem(myHero, "item_blink")
 
-	local crimson = NPC.GetItem(myHero, "item_crimson_guard")
+	local crimson = NPC.GetItem(myHero, "item_crimson_guard") 
 
 	local atos = NPC.GetItem(myHero, "item_rod_of_atos")
+
+	local eul = NPC.GetItem(myHero, "item_cyclone")
 
 --------------------------------------------------------------------------------
 
@@ -299,17 +309,13 @@ function Elder.OnUpdate()
 		enemy = nil
 	end
 ---------------------------------------------------------------------------------------------------
+	
 
 --Полное комбо
 
-	if Menu.IsKeyDown(Elder.optionFullCombo) and enemy and (not NPC.IsChannellingAbility(myHero)) then
+	if Menu.IsKeyDown(Elder.optionFullCombo) and enemy and (not NPC.IsChannellingAbility(myHero)) and (not NPC.GetModifier(enemy, "modifier_black_king_bar_immune")) and (not NPC.GetModifier(enemy, "modifier_life_stealer_rage")) and (not NPC.GetModifier(enemy, "modifier_juggernaut_blade_fury"))  then
 		if meteor then
 			if (not Ability.IsChannelling(meteor)) then
-				if Elder.SleepReady(orderDelay, lastMoveOrder) then
-					Player.AttackTarget(myPlayer, myHero, enemy)
-					lastMoveOrder = os.clock()
-				end	
-
 				local distance = ((Entity.GetOrigin(myHero) - (Entity.GetOrigin(enemy))):Length2D())
 				position =  Elder.GetPredictedPosition(enemy, 1)
 				if Elder.Blink(blink, position, distance, mana) == true then
@@ -337,11 +343,11 @@ function Elder.OnUpdate()
 					return
 				end		
 
-				if Menu.IsEnabled(Elder.optionBloodthorn) and Elder.ItemTarget(bloodthorn, enemy, mana) == true then
+				if Menu.IsEnabled(Elder.optionBloodthorn) and (not NPC.GetModifier(enemy, "modifier_bloodthorn_debuff")) and Elder.ItemTarget(bloodthorn, enemy, mana) == true then
 					return
 				end
 
-				if  Menu.IsEnabled(Elder.optionOrchidMalevolence) and Elder.ItemTarget(orchid, enemy, mana) == true then
+				if  Menu.IsEnabled(Elder.optionOrchidMalevolence) and (not NPC.GetModifier(enemy, "modifier_orchid_malevolence_debuff")) and Elder.ItemTarget(orchid, enemy, mana) == true then
 					return
 				end
 
@@ -390,13 +396,13 @@ function Elder.OnUpdate()
 				if Menu.IsEnabled(Elder.optionRefresherOrb) and Elder.ItemNoTarget(refresher, mana) == true then
 					return
 				end
+
+				if Elder.SleepReady(orderDelay, lastMoveOrder) then
+					Player.AttackTarget(myPlayer, myHero, enemy)
+					lastMoveOrder = os.clock()
+				end	
 			end	
 		else
-			if Elder.SleepReady(orderDelay, lastMoveOrder) then
-				Player.AttackTarget(myPlayer, myHero, enemy)
-				lastMoveOrder = os.clock()
-			end	
-
 			local distance = ((Entity.GetOrigin(myHero) - (Entity.GetOrigin(enemy))):Length2D())
 			position =  Elder.GetPredictedPosition(enemy, 1)
 			if Elder.Blink(blink, position, distance, mana) == true then
@@ -424,11 +430,11 @@ function Elder.OnUpdate()
 				return
 			end		
 
-			if Menu.IsEnabled(Elder.optionBloodthorn) and Elder.ItemTarget(bloodthorn, enemy, mana) == true then
+			if Menu.IsEnabled(Elder.optionBloodthorn) and (not NPC.GetModifier(enemy, "modifier_bloodthorn_debuff")) and Elder.ItemTarget(bloodthorn, enemy, mana) == true then
 				return
 			end
 
-			if  Menu.IsEnabled(Elder.optionOrchidMalevolence) and Elder.ItemTarget(orchid, enemy, mana) == true then
+			if  Menu.IsEnabled(Elder.optionOrchidMalevolence) and (not NPC.GetModifier(enemy, "modifier_orchid_malevolence_debuff")) and Elder.ItemTarget(orchid, enemy, mana) == true then
 				return
 			end
 
@@ -477,25 +483,42 @@ function Elder.OnUpdate()
 			if Menu.IsEnabled(Elder.optionRefresherOrb) and Elder.ItemNoTarget(refresher, mana) == true then
 				return
 			end
+
+			if Elder.SleepReady(orderDelay, lastMoveOrder) then
+				Player.AttackTarget(myPlayer, myHero, enemy)
+				lastMoveOrder = os.clock()
+			end	
 		end				
 	end
 
-
-
 --Второе комбо
-	if Menu.IsKeyDown(Elder.optionCombo2) and enemy and (not NPC.IsChannellingAbility(myHero)) then
+	if Menu.IsKeyDown(Elder.optionCombo2) and enemy and (not NPC.IsChannellingAbility(myHero)) and (not NPC.GetModifier(enemy, "modifier_black_king_bar_immune")) and (not NPC.GetModifier(enemy, "modifier_life_stealer_rage")) and (not NPC.GetModifier(enemy, "modifier_juggernaut_blade_fury"))  then
 		if meteor then
 			if (not Ability.IsChannelling(meteor)) then
-
-				if Elder.SleepReady(orderDelay2, lastMoveOrder2) then
-					Player.AttackTarget(myPlayer, myHero, enemy)
-					lastMoveOrder2 = os.clock()
-				end
 
 				local distance = ((Entity.GetOrigin(myHero) - (Entity.GetOrigin(enemy))):Length2D())
 				if Elder.Blink(blink, Entity.GetAbsOrigin(enemy), distance, mana) == true then
 					return
-				end	
+				end
+
+				if Elder.ItemTarget(eul, enemy, mana) == true then
+					return
+				end
+
+
+				local modifierCyclone = NPC.GetModifier(enemy, 'modifier_eul_cyclone')	
+				if modifierCyclone then
+					if Elder.Astral(astral, Entity.GetAbsOrigin(enemy), distance, mana) == true then
+						return
+					end
+					local timer = Modifier.GetDieTime(modifierCyclone) - GameRules.GetGameTime()
+					if timer < (1.7 - NetChannel.GetAvgLatency(Enum.Flow.FLOW_OUTGOING)) then
+						if Elder.Echo(echo, mana) == true then
+							return
+						end	
+					end
+					return 
+				end		
 
 				position =  Elder.GetPredictedPosition(enemy, 1.8)
 				if Elder.Astral(astral, position, distance, mana) == true then
@@ -513,16 +536,34 @@ function Elder.OnUpdate()
 				if Menu.IsEnabled(Elder.optionReturnSpirit) and Ability.IsReady(returnSpirit) and Ability.IsCastable(returnSpirit, mana) then
 					Ability.CastNoTarget(returnSpirit)
 				end
+
+				if Elder.SleepReady(orderDelay2, lastMoveOrder2) then
+					Player.AttackTarget(myPlayer, myHero, enemy)
+					lastMoveOrder2 = os.clock()
+				end
 			end	
 		else
-			if Elder.SleepReady(orderDelay2, lastMoveOrder2) then
-				Player.AttackTarget(myPlayer, myHero, enemy)
-				lastMoveOrder2 = os.clock()
-			end
-
 			local distance = ((Entity.GetOrigin(myHero) - (Entity.GetOrigin(enemy))):Length2D())
 			if Elder.Blink(blink, Entity.GetAbsOrigin(enemy), distance, mana) == true then
 				return
+			end	
+
+			if Elder.ItemTarget(eul, enemy, mana) == true then
+				return
+			end
+
+			local modifierCyclone = NPC.GetModifier(enemy, 'modifier_eul_cyclone')	
+			if modifierCyclone then
+				if Elder.Astral(astral, Entity.GetAbsOrigin(enemy), distance, mana) == true then
+					return
+				end
+				local timer = Modifier.GetDieTime(modifierCyclone) - GameRules.GetGameTime()
+				if timer < (1.7 - NetChannel.GetAvgLatency(Enum.Flow.FLOW_OUTGOING)) then
+					if Elder.Echo(echo, mana) == true then
+						return
+					end	
+				end
+				return 
 			end	
 
 			position =  Elder.GetPredictedPosition(enemy, 1.8)
@@ -541,8 +582,22 @@ function Elder.OnUpdate()
 			if Menu.IsEnabled(Elder.optionReturnSpirit) and Ability.IsReady(returnSpirit) and Ability.IsCastable(returnSpirit, mana) then
 				Ability.CastNoTarget(returnSpirit)
 			end
+
+			if Elder.SleepReady(orderDelay2, lastMoveOrder2) then
+				Player.AttackTarget(myPlayer, myHero, enemy)
+				lastMoveOrder2 = os.clock()
+			end
 		end		
-	end		
+	end
+
+--Преследовать курсор
+	if Menu.IsEnabled(Elder.optionCursor) then
+		if Menu.IsKeyDown(Elder.optionFullCombo) or Menu.IsKeyDown(Elder.optionCombo2) then
+			if (not enemy) and (not NPC.IsChannellingAbility(myHero)) then
+				NPC.MoveTo(myHero, Input.GetWorldCursorPos())
+			end		
+		end	
+	end			
 -------------------------------------------------------------------------------			
 end
 
