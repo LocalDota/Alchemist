@@ -265,35 +265,36 @@ function Elder.OnUpdate()
 
 --Предметы
 
-	local sheepstick = NPC.GetItem(myHero, "item_sheepstick")
+	local sheepstick = Elder.CheckItem("item_sheepstick")
 
-	local mjollnir = NPC.GetItem(myHero, "item_mjollnir")
+	local mjollnir = Elder.CheckItem("item_mjollnir")
 
-	local bloodthorn = NPC.GetItem(myHero, "item_bloodthorn")
+	local bloodthorn = Elder.CheckItem("item_bloodthorn")
 
-	local orchid = NPC.GetItem(myHero, "item_orchid")
+	local orchid = Elder.CheckItem("item_orchid")
 
-	local shivasguard = NPC.GetItem(myHero, "item_shivas_guard")
+	local shivasguard = Elder.CheckItem("item_shivas_guard")
 
-	local blackkingbar = NPC.GetItem(myHero, "item_black_king_bar")
+	local blackkingbar = Elder.CheckItem("item_black_king_bar")
 
-	local blademail = NPC.GetItem(myHero, "item_blade_mail")
+	local blademail = Elder.CheckItem("item_blade_mail")
 
-	local satanic = NPC.GetItem(myHero, "item_satanic")
+	local satanic = Elder.CheckItem("item_satanic")
 
-	local lotusorb = NPC.GetItem(myHero, "item_lotus_orb")
+	local lotusorb = Elder.CheckItem("item_lotus_orb")
 
-	local meteor = NPC.GetItem(myHero, "item_meteor_hammer")
+	local meteor = Elder.CheckItem("item_meteor_hammer")
 
-	local refresher = NPC.GetItem(myHero, "item_refresher")
+	local refresher = Elder.CheckItem("item_refresher")
 
-	local blink = NPC.GetItem(myHero, "item_blink")
+	local blink = Elder.CheckItem("item_blink")
 
-	local crimson = NPC.GetItem(myHero, "item_crimson_guard") 
+	local crimson = Elder.CheckItem("item_crimson_guard") 
 
-	local atos = NPC.GetItem(myHero, "item_rod_of_atos")
+	local atos = Elder.CheckItem("item_rod_of_atos")
 
-	local eul = NPC.GetItem(myHero, "item_cyclone")
+	local eul = Elder.CheckItem("item_cyclone")
+
 
 --------------------------------------------------------------------------------
 
@@ -711,6 +712,15 @@ function Elder.Blink(ability, origin, distance, mana)
 end
 
 
+--Проверка на слоты
+function Elder.CheckItem(item)
+	for i = 0, 5 do
+        local itemCheck = NPC.GetItemByIndex(myHero, i)
+        if itemCheck and item == Ability.GetName(itemCheck) then
+            return itemCheck
+        end
+	end
+end
 
 
 
