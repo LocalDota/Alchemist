@@ -9,16 +9,21 @@ local myHero = nil
 
 local RU = "russian"
 local EN = "english" 
+local CN = "Chinese" 
  
  
 local language = EN
  
-local LanguageItem = Menu.GetLanguageOptionId()
-local menuLang = Menu.GetValue(LanguageItem)
-if menuLang == 1 then -- ru
-	language = RU
-elseif menuLang == 0 then -- en
-	language = EN
+if Menu.GetLanguageOptionId then
+    local LanguageItem = Menu.GetLanguageOptionId()
+    local menuLang = Menu.GetValue(LanguageItem)
+    if menuLang == 1 then -- ru
+      language = RU
+    elseif menuLang == 0 then -- en
+      language = EN
+	elseif menuLang == 2 then -- cn
+	  language = CN
+    end
 end
 
 
@@ -26,14 +31,17 @@ local Translation = {
     ["optionEnable"] = {
         [RU] = "Включение",
         [EN] = "Enable",
+		[CN] = "启用",
     },
     ["optionSlider"] = {
         [RU] = "Порог здоровья в %",
         [EN] = "HPercent Threshold",
+		[CN] = "生命值百分比",
     },
     ["optionSlider2"] = {
         [RU] = "Порог здорoвья в %", -- здоровья 2 o EN
         [EN] = "HPercent Threshold",
+		[CN] = "生命值百分比",
     },
 }
 
@@ -44,7 +52,11 @@ local mainPath = {rootPath, "Neutral Items"}
 if language == RU then
     rootPath = "Утилиты"
     mainPath = {rootPath, "Нейтральные предметы"}
-end    
+end   
+if language == CN then
+    rootPath = "通用"
+    mainPath = {rootPath, "中立物品助手"}
+end     
 
 
 

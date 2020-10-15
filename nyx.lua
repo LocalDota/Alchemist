@@ -36,8 +36,6 @@ local CN = "Chinese"
  
 local language = EN
  
-local LanguageItem = Menu.GetLanguageOptionId()
-local menuLang = Menu.GetValue(LanguageItem)
 if Menu.GetLanguageOptionId then
     local LanguageItem = Menu.GetLanguageOptionId()
     local menuLang = Menu.GetValue(LanguageItem)
