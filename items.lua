@@ -127,7 +127,7 @@ function Items.OnUpdate()
 	local greaterfaeriefire = NPC.GetItem(myHero, "item_greater_faerie_fire")
 		
 
-	if Menu.IsEnabled(Items.optionArcaneRing) and arcanering and (not NPC.IsChannellingAbility(myHero))   and NPC.GetMana(myHero)+100 < NPC.GetMaxMana(myHero) and Ability.IsReady(arcanering) and NPC.GetItemByIndex(myHero, 16) == arcanering and not NPC.HasState(myHero, Enum.ModifierState.MODIFIER_STATE_INVISIBLE) then
+	if Menu.IsEnabled(Items.optionArcaneRing) and arcanering and (not Item.IsItemEnabled(arcanering)) and (not NPC.IsChannellingAbility(myHero))   and NPC.GetMana(myHero)+100 < NPC.GetMaxMana(myHero) and Ability.IsReady(arcanering) and NPC.GetItemByIndex(myHero, 16) == arcanering and not NPC.HasState(myHero, Enum.ModifierState.MODIFIER_STATE_INVISIBLE) then
 		if tp  then
 			if (not Ability.IsChannelling(tp)) then
 				Ability.CastNoTarget(arcanering)
@@ -138,7 +138,7 @@ function Items.OnUpdate()
 	end	
 
 	local table_radius_talon = Entity.GetUnitsInRadius(myHero, 350, Enum.TeamType.TEAM_ENEMY)
-	if Menu.IsEnabled(Items.optionIronTalon) and irontalon and (not NPC.IsChannellingAbility(myHero))  and #table_radius_talon > 0 and #Entity.GetHeroesInRadius(myHero, 1500, Enum.TeamType.TEAM_ENEMY) == 0 and Entity.GetHealth(myHero) > 150 and Ability.IsReady(irontalon) and NPC.GetItemByIndex(myHero, 16) == irontalon and not NPC.HasState(myHero, Enum.ModifierState.MODIFIER_STATE_INVISIBLE) then
+	if Menu.IsEnabled(Items.optionIronTalon) and irontalon and (not Item.IsItemEnabled(irontalon)) and (not NPC.IsChannellingAbility(myHero))  and #table_radius_talon > 0 and #Entity.GetHeroesInRadius(myHero, 1500, Enum.TeamType.TEAM_ENEMY) == 0 and Entity.GetHealth(myHero) > 150 and Ability.IsReady(irontalon) and NPC.GetItemByIndex(myHero, 16) == irontalon and not NPC.HasState(myHero, Enum.ModifierState.MODIFIER_STATE_INVISIBLE) then
 		for index, unit in pairs(table_radius_talon) do
 			if Entity.GetHealth(unit) > 550 then
 				if tp then
@@ -152,7 +152,7 @@ function Items.OnUpdate()
 		end
 	end	
 
-	if Menu.IsEnabled(Items.optionSpiderLegs) and spiderlegs and (not NPC.IsChannellingAbility(myHero))  and Ability.IsReady(spiderlegs) and NPC.GetItemByIndex(myHero, 16) == spiderlegs and NPC.IsRunning(myHero) and not NPC.HasState(myHero, Enum.ModifierState.MODIFIER_STATE_INVISIBLE) then
+	if Menu.IsEnabled(Items.optionSpiderLegs) and spiderlegs and (not Item.IsItemEnabled(spiderlegs)) and (not NPC.IsChannellingAbility(myHero))  and Ability.IsReady(spiderlegs) and NPC.GetItemByIndex(myHero, 16) == spiderlegs and NPC.IsRunning(myHero) and not NPC.HasState(myHero, Enum.ModifierState.MODIFIER_STATE_INVISIBLE) then
 		if tp  then
 			if (not Ability.IsChannelling(tp)) then
 				Ability.CastNoTarget(spiderlegs)
@@ -162,7 +162,7 @@ function Items.OnUpdate()
 		end			
 	end
 
-	if Menu.IsEnabled(Items.optionHavocHammer) and havochammer and (not NPC.IsChannellingAbility(myHero)) and #Entity.GetHeroesInRadius(myHero, 400, Enum.TeamType.TEAM_ENEMY) ~= 0 and Ability.IsReady(havochammer) and NPC.GetItemByIndex(myHero, 16) == havochammer and not NPC.HasState(myHero, Enum.ModifierState.MODIFIER_STATE_INVISIBLE)  then	
+	if Menu.IsEnabled(Items.optionHavocHammer) and havochammer and (not Item.IsItemEnabled(havochammer)) and (not NPC.IsChannellingAbility(myHero)) and #Entity.GetHeroesInRadius(myHero, 400, Enum.TeamType.TEAM_ENEMY) ~= 0 and Ability.IsReady(havochammer) and NPC.GetItemByIndex(myHero, 16) == havochammer and not NPC.HasState(myHero, Enum.ModifierState.MODIFIER_STATE_INVISIBLE)  then	
 		if tp  then
 			if (not Ability.IsChannelling(tp)) then
 				Ability.CastNoTarget(havochammer)
@@ -173,7 +173,7 @@ function Items.OnUpdate()
 	end	
 	
 	local result = Menu.GetValue(Items.optionSlider) 
-	if Menu.IsEnabled(Items.optionEssenceRing) and essencering and (not NPC.IsChannellingAbility(myHero)) and Ability.IsReady(essencering) and NPC.GetItemByIndex(myHero, 16) == essencering and NPC.GetMana(myHero) > 200 and (100/(Entity.GetMaxHealth(myHero)/Entity.GetHealth(myHero))) < result and #Entity.GetHeroesInRadius(myHero, 700, Enum.TeamType.TEAM_ENEMY) ~= 0 and not NPC.HasState(myHero, Enum.ModifierState.MODIFIER_STATE_INVISIBLE)  then
+	if Menu.IsEnabled(Items.optionEssenceRing) and essencering and (not Item.IsItemEnabled(essencering)) and (not NPC.IsChannellingAbility(myHero)) and Ability.IsReady(essencering) and NPC.GetItemByIndex(myHero, 16) == essencering and NPC.GetMana(myHero) > 200 and (100/(Entity.GetMaxHealth(myHero)/Entity.GetHealth(myHero))) < result and #Entity.GetHeroesInRadius(myHero, 700, Enum.TeamType.TEAM_ENEMY) ~= 0 and not NPC.HasState(myHero, Enum.ModifierState.MODIFIER_STATE_INVISIBLE)  then
 		if tp  then
 			if (not Ability.IsChannelling(tp)) then
 				Ability.CastNoTarget(essencering)
@@ -184,7 +184,7 @@ function Items.OnUpdate()
 	end	
 
 	local result_2 = Menu.GetValue(Items.optionSlider2) 
-	if Menu.IsEnabled(Items.optionGreaterFaerieFire) and greaterfaeriefire and (not NPC.IsChannellingAbility(myHero)) and Ability.IsReady(greaterfaeriefire) and NPC.GetItemByIndex(myHero, 16) == greaterfaeriefire and (100/(Entity.GetMaxHealth(myHero)/Entity.GetHealth(myHero))) < result_2 and #Entity.GetHeroesInRadius(myHero, 700, Enum.TeamType.TEAM_ENEMY) ~= 0 and not NPC.HasState(myHero, Enum.ModifierState.MODIFIER_STATE_INVISIBLE)  then
+	if Menu.IsEnabled(Items.optionGreaterFaerieFire) and greaterfaeriefire and (not Item.IsItemEnabled(greaterfaeriefire)) and (not NPC.IsChannellingAbility(myHero)) and Ability.IsReady(greaterfaeriefire) and NPC.GetItemByIndex(myHero, 16) == greaterfaeriefire and (100/(Entity.GetMaxHealth(myHero)/Entity.GetHealth(myHero))) < result_2 and #Entity.GetHeroesInRadius(myHero, 700, Enum.TeamType.TEAM_ENEMY) ~= 0 and not NPC.HasState(myHero, Enum.ModifierState.MODIFIER_STATE_INVISIBLE)  then
 		if tp then
 			if (not Ability.IsChannelling(tp)) then
 				Ability.CastNoTarget(greaterfaeriefire)
