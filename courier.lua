@@ -282,5 +282,22 @@ function Economy.Move_2(courier)
 end	
 
 
+
+function Economy.OnEntityDestroy(entity)
+	if not myHero then 
+		return
+	end	
+
+	if entity == myHero then
+		Economy.Reinit()
+		return
+	end	
+end	
+
+function Economy.Reinit()
+	myCourier, myPlayer, mySide, burst, shield = nil, nil, nil, nil, nil  
+end	
+
+
 return Economy
 
