@@ -1,6 +1,6 @@
 local Elder = {}
 
-local myHero, myPlayer, enemy, echo, astral, splitter, returnSpirit = nil, nil, nil, nil, nil, nil, nil
+local myHero, myPlayer, enemy, echo, astral, splitter, returnSpirit, spirit = nil, nil, nil, nil, nil, nil, nil, nil
 
 
 --------------------------------------------------
@@ -239,6 +239,18 @@ function Elder.OnUpdate()
 	local mana = NPC.GetMana(myHero)
 -----------------------------------------
 
+--Находим спирита
+	if (not spirit) then
+		for index, npc in pairs(NPCs.GetAll()) do
+			if npc and NPC.GetUnitName(npc) == "npc_dota_elder_titan_ancestral_spirit" then
+				spirit = npc
+			end	
+		end
+		return
+	end
+
+
+
 --Способности ищем
 
 	if (not echo) then
@@ -335,9 +347,11 @@ function Elder.OnUpdate()
 					return
 				end
 
-				if Elder.Echo(echo, mana) == true then
-					return
-				end	
+				if spirit and ((Entity.GetOrigin(spirit) - Entity.GetOrigin(enemy)):Length2D()) < 500 then
+					if Elder.Echo(echo, mana) == true then
+						return
+					end
+				end		
 
 				position =  Elder.GetPredictedPosition(enemy, 0.5)
 				if Elder.Splitter(splitter, position, distance, mana) == true then
@@ -422,8 +436,10 @@ function Elder.OnUpdate()
 				return
 			end
 
-			if Elder.Echo(echo, mana) == true then
-				return
+			if spirit and ((Entity.GetOrigin(spirit) - Entity.GetOrigin(enemy)):Length2D()) < 500 then
+				if Elder.Echo(echo, mana) == true then
+					return
+				end
 			end	
 
 			position =  Elder.GetPredictedPosition(enemy, 0.5)
@@ -526,8 +542,10 @@ function Elder.OnUpdate()
 					return
 				end
 
-				if Elder.Echo(echo, mana) == true then
-					return
+				if spirit and ((Entity.GetOrigin(spirit) - Entity.GetOrigin(enemy)):Length2D()) < 500 then
+					if Elder.Echo(echo, mana) == true then
+						return
+					end
 				end	
 
 				if Menu.IsEnabled(Elder.optionMeteorHammer) and Elder.ItemOrigin(meteor, Entity.GetAbsOrigin(enemy), mana) == true then
@@ -572,8 +590,10 @@ function Elder.OnUpdate()
 				return
 			end
 
-			if Elder.Echo(echo, mana) == true then
-				return
+			if spirit and ((Entity.GetOrigin(spirit) - Entity.GetOrigin(enemy)):Length2D()) < 500 then
+				if Elder.Echo(echo, mana) == true then
+					return
+				end	
 			end	
 
 			if Menu.IsEnabled(Elder.optionMeteorHammer) and Elder.ItemOrigin(meteor, Entity.GetAbsOrigin(enemy), mana) == true then
