@@ -744,7 +744,23 @@ end
 
 
 
+function Elder.OnEntityDestroy(entity)
+    if not myHero then 
+        return
+    end 
 
+    if entity == myHero then
+        Elder.Reinit()
+        return
+    end 
+end 
+
+function Elder.Reinit()
+    myHero, myPlayer, enemy, echo, astral, splitter, returnSpirit, spirit = nil, nil, nil, nil, nil, nil, nil, nil
+
+    particleEnemy = nil
+ 
+end 
 
 
 
