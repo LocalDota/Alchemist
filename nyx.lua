@@ -814,4 +814,23 @@ function Nyx.ItemNoTarget(item, mana)
 end
 
 
+function Nyx.OnEntityDestroy(entity)
+    if not myHero then 
+        return
+    end 
+
+    if entity == myHero then
+        Nyx.Reinit()
+        return
+    end 
+end 
+
+function Nyx.Reinit()
+    myHero, myPlayer, enemy, impale, burn, carapace, vendetta = nil, nil, nil, nil, nil, nil, nil
+
+    particleEnemy = nil
+end 
+
+
+
 return Nyx
