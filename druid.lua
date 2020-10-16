@@ -920,6 +920,27 @@ function Druid.FindNearestHero(myHero)
 end	
 
 
+function Druid.OnEntityDestroy(entity)
+    if not myHero then 
+        return
+    end 
+
+    if entity == myHero then
+        Druid.Reinit()
+        return
+    end 
+end 
+
+function Druid.Reinit()
+    myHero, myPlayer, enemy, bear, autoreturn, tower = nil, nil, nil, nil, nil, nil
+
+    particleEnemy = nil
+
+    nearestHero = nil  
+end 
+
+
+
 
 
 
