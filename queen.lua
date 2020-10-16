@@ -517,5 +517,23 @@ function Queen.Hurricane(item, enemy, distance, mana)
 end
 
 
+function Queen.OnEntityDestroy(entity)
+    if not myHero then 
+        return
+    end 
+
+    if entity == myHero then
+        Queen.Reinit()
+        return
+    end 
+end 
+
+function Queen.Reinit()
+    myHero, myPlayer, enemy, strike, blink, scream, sonic = nil, nil, nil, nil, nil, nil, nil
+
+    particleEnemy = nil
+end 
+
+
 
 return Queen
