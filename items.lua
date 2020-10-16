@@ -207,5 +207,21 @@ function Items.OnUpdate()
 	end			
 end
 
+
+function Items.OnEntityDestroy(entity)
+    if not myHero then 
+        return
+    end 
+
+    if entity == myHero then
+        Items.Reinit()
+        return
+    end 
+end 
+
+function Items.Reinit()
+    myHero = nil
+end 
+
 return Items
 
