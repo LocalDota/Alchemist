@@ -489,6 +489,26 @@ function Alchemist.OnDraw()
 			targetParticle = 0
 		end
 	end
+end
+
+
+function Alchemist.OnEntityDestroy(entity)
+	if not myHero then 
+		return
+	end	
+
+	if entity == myHero then
+		Alchemist.Reinit()
+		return
+	end	
+end	
+
+function Alchemist.Reinit()
+	myHero, myPlayer, enemy, acid, concoction, rage, concoctionThrow = nil, nil, nil, nil, nil, nil, nil
+
+	nearestHero = nil
+
+	particleEnemy = nil
 end	
 ----------------------------------------------------------------------------------------------------------------------------
 --Функции способностей
