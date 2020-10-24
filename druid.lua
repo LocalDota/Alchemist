@@ -1,6 +1,6 @@
 local Druid = {}
 
-local myHero, myPlayer, enemy, bear, autoreturn, tower = nil, nil, nil, nil, nil, nil
+local myHero, myPlayer, enemy, bear, autoreturn, tower, mySide = nil, nil, nil, nil, nil, nil, nil
 
 local Font = Renderer.LoadFont("Tahoma", 18, Enum.FontCreate.FONTFLAG_OUTLINE)
 
@@ -22,6 +22,13 @@ local blinked = {}
 ------------------------------------------------
 local targetParticle = 0
 ------------------------------------------------
+
+
+--База
+local fountainTable = {
+	[2] = Vector(-6578, -6019, 282),
+	[3] = Vector(6605, 5975, 534)
+}
 
 
 
@@ -165,6 +172,16 @@ local Translation = {
     	[EN] = "Enable Bot",
 		[CN] = "Enable Bot",
     },
+    ["optionTpDisable"] = {
+        [RU] = "Сбивать ТП",
+        [EN] = "Teleport Disable",
+        [CN] = "",
+    },
+    ["optionToBase"] = {
+    	[RU] = "Кнопка для тп медведя на базу",
+    	[EN] = "Button for tp bear on base",
+		[CN] = "",
+    },
 }
 
 
@@ -225,6 +242,9 @@ Menu.AddOptionIcon(Druid.optionFullCombo, "~/MenuIcons/enemy_evil.png")
 Druid.optionComboB = Menu.AddKeyOption(mainPath, Translation.optionComboB[language], Enum.ButtonCode.KEY_NONE)
 Menu.AddOptionIcon(Druid.optionComboB, "~/MenuIcons/enemy_evil.png")
 
+Druid.optionToBase = Menu.AddKeyOption(mainPath, Translation.optionToBase[language], Enum.ButtonCode.KEY_NONE)
+Menu.AddOptionIcon(Druid.optionToBase, "panorama/images/items/".."tpscroll".."_png.vtex_c")
+
 Druid.optionIsTargetParticleEnabled = Menu.AddOptionBool(particlePath, Translation.optionIsTargetParticleEnabled[language], true)
 Menu.AddOptionIcon(Druid.optionIsTargetParticleEnabled, "~/MenuIcons/target.png")
 Druid.optionRangeToTarget = Menu.AddOptionSlider(particlePath, Translation.optionRangeToTarget[language], 1, 3000, 500)
@@ -243,6 +263,9 @@ Menu.AddMenuIcon(roarPath, "panorama\\images\\spellicons\\lone_druid_savage_roar
 
 Druid.optionAutoRoarInitiation = Menu.AddOptionBool(roarPath, Translation.optionAutoRoarInitiation[language], true)
 Menu.AddOptionIcon(Druid.optionAutoRoarInitiation, "panorama\\images\\spellicons\\lone_druid_savage_roar_png.vtex_c")
+
+Druid.optionTpDisable = Menu.AddOptionBool(roarPath, Translation.optionTpDisable[language], true)
+Menu.AddOptionIcon(Druid.optionTpDisable, "panorama/images/items/".."tpscroll".."_png.vtex_c")
 
 Druid.optionAutoRoarDruid2 = Menu.AddOptionBool(roarPath, Translation.optionAutoRoarDruid2[language], true)
 Menu.AddOptionIcon(Druid.optionAutoRoarDruid2, "panorama/images/heroes/icons/npc_dota_hero_lone_druid_png.vtex_c")
@@ -386,6 +409,11 @@ function Druid.OnUpdate()
 		return
 	end
 
+	if (not mySide) then
+		mySide = Entity.GetTeamNum(myPlayer)
+		return
+	end
+
 
 	if Menu.IsKeyDownOnce(Druid.optionBearGuardKey) then
 		if Menu.IsEnabled(Druid.optionBot) == true then
@@ -497,6 +525,7 @@ function Druid.OnUpdate()
 	end
 ---------------------------------------------------------------------------------------------------	
 
+
 --Авто фейзы медведя	
 	if  Menu.IsEnabled(Druid.optionAutoPhaseB) and phasebootsB and NPC.IsRunning(bear) and Ability.IsReady(phasebootsB) then
 		Ability.CastNoTarget(phasebootsB)
@@ -520,10 +549,22 @@ function Druid.OnUpdate()
 		end
 	end
 
+--Тп мишки на базу
+	if Menu.IsKeyDownOnce(Druid.optionToBase) then
+		if tp and (not Ability.IsChannelling(tp)) then
+			Ability.CastPosition(tp, fountainTable[mySide])
+		end		
+	end	
 
---ZXZXZXzzzZXZZXZXZXZ
+
+
 --БОТ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-	if Menu.IsEnabled(Druid.optionBot) and (not Menu.IsKeyDown(Druid.optionFullCombo)) and (not Menu.IsKeyDown(Druid.optionComboB)) then
+	if Menu.IsEnabled(Druid.optionBot) and (not Menu.IsKeyDown(Druid.optionFullCombo)) and (not Menu.IsKeyDown(Druid.optionComboB)) and bear and (not NPC.IsChannellingAbility(bear)) then
+		if Menu.IsEnabled(Druid.optionTpGuard) and bear	then
+			if ((Entity.GetOrigin(bear) - Entity.GetOrigin(myHero)):Length2D()) > 3000 and Entity.IsAlive(bear) and Druid.AutoReturn(autoreturn, manaB) == true then
+				return
+			end
+		end
 		if Menu.IsEnabled(Druid.optionBearGuard)  then
 			local nearestHero = Druid.FindNearestHero(myHero) 
 
@@ -556,11 +597,6 @@ function Druid.OnUpdate()
 				NPC.MoveTo(bear, Entity.GetOrigin(myHero))
 			end		
 		end
-		if Menu.IsEnabled(Druid.optionTpGuard) and bear	then
-			if ((Entity.GetOrigin(bear) - Entity.GetOrigin(myHero)):Length2D()) > 3000 and Entity.IsAlive(bear) and Druid.AutoReturn(autoreturn, manaB) == true then
-				return
-			end
-		end
 		if Menu.IsEnabled(Druid.optionMomGuard) and bear and NPC.IsAttacking(bear) then
 			if Menu.IsEnabled(Druid.optionMaskOfMadnessB)  and Druid.ItemNoTarget(maskofmadnessB, manaB) == true then
 				return
@@ -580,7 +616,20 @@ function Druid.OnUpdate()
 		--Анти-врыв
 		if Menu.IsEnabled(Druid.optionAutoRoarInitiation) and blinked[#blinked] and blinked[#blinked].unit and  blinked[#blinked].time and ((Entity.GetOrigin(myHero) - (Entity.GetOrigin(blinked[#blinked].unit))):Length2D()) < 375 and (GameRules.GetGameTime() - blinked[#blinked].time) < 0.1 and (not Entity.IsSameTeam(myHero, blinked[#blinked].unit))  then
 			Druid.AutoRoar(roar, mana)
-		end	
+		end
+
+        if Menu.IsEnabled(Druid.optionTpDisable) and nearestHero then
+            tpEnemy = NPC.GetItemByIndex(nearestHero, 15)
+            if tpEnemy then
+                if (Ability.IsChannelling(tpEnemy)) and ((Entity.GetOrigin(nearestHero) - Entity.GetOrigin(myHero)):Length2D()) < 375 then
+                    Druid.AutoRoar(roar, mana)
+                end
+
+                if (Ability.IsChannelling(tpEnemy)) and ((Entity.GetOrigin(nearestHero) - Entity.GetOrigin(bear)):Length2D()) < 375 then
+                    Druid.AutoRoar(roarB, manaB)
+                end
+            end
+        end         	
 
 		--Больше 2 врагов возле героя
 		if Menu.IsEnabled(Druid.optionAutoRoarDruid2) and  InRadius >= 2 and nearestHero then
@@ -932,7 +981,7 @@ function Druid.OnEntityDestroy(entity)
 end 
 
 function Druid.Reinit()
-    myHero, myPlayer, enemy, bear, autoreturn, tower = nil, nil, nil, nil, nil, nil
+    myHero, myPlayer, enemy, bear, autoreturn, tower, mySide = nil, nil, nil, nil, nil, nil, nil
 
     particleEnemy = nil
 
