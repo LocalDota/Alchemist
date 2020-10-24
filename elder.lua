@@ -354,7 +354,7 @@ function Elder.OnUpdate()
 				end		
 
 				position =  Elder.GetPredictedPosition(enemy, 0.5)
-				if Elder.Splitter(splitter, position, distance, mana) == true then
+				if NPC.GetModifier(enemy, "modifier_elder_titan_echo_stomp") and Elder.Splitter(splitter, position, distance, mana) == true then
 					return
 				end		
 
@@ -443,7 +443,7 @@ function Elder.OnUpdate()
 			end	
 
 			position =  Elder.GetPredictedPosition(enemy, 0.5)
-			if Elder.Splitter(splitter, position, distance, mana) == true then
+			if NPC.GetModifier(enemy, "modifier_elder_titan_echo_stomp") and Elder.Splitter(splitter, position, distance, mana) == true then
 				return
 			end		
 
