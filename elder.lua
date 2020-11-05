@@ -366,7 +366,7 @@ function Elder.OnUpdate()
 					return
 				end
 
-				if Menu.IsEnabled(Elder.optionMeteorHammer) and Elder.ItemOrigin(meteor, Entity.GetAbsOrigin(enemy), mana) == true then
+				if Menu.IsEnabled(Elder.optionMeteorHammer) and NPC.GetModifier(enemy, "modifier_elder_titan_echo_stomp") and Elder.ItemOrigin(meteor, Entity.GetAbsOrigin(enemy), mana) == true then
 					return
 				end
 
@@ -455,7 +455,7 @@ function Elder.OnUpdate()
 				return
 			end
 
-			if Menu.IsEnabled(Elder.optionMeteorHammer) and Elder.ItemOrigin(meteor, Entity.GetAbsOrigin(enemy), mana) == true then
+			if Menu.IsEnabled(Elder.optionMeteorHammer) and NPC.GetModifier(enemy, "modifier_elder_titan_echo_stomp") and Elder.ItemOrigin(meteor, Entity.GetAbsOrigin(enemy), mana) == true then
 				return
 			end
 
