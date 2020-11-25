@@ -77,6 +77,11 @@ local Translation = {
     	[EN] = "Move to cursor if no enemy in combo",
 		[CN] = "无目标时移动到鼠标",
     },
+    ["optionEul"] = {
+    	[RU] = "Использовать еул", 
+    	[EN] = "Use eul",
+		[CN] = "",
+    },
 }
 
 
@@ -115,6 +120,9 @@ Menu.AddMenuIcon(mainPath, "panorama/images/heroes/icons/npc_dota_hero_jakiro_pn
 
 Jakiro.optionFullCombo = Menu.AddKeyOption(mainPath, Translation.optionFullCombo[language], Enum.ButtonCode.KEY_NONE)
 Menu.AddOptionIcon(Jakiro.optionFullCombo, "~/MenuIcons/enemy_evil.png")
+
+Jakiro.optionEul = Menu.AddOptionBool(mainPath, Translation.optionEul[language], false)
+Menu.AddOptionIcon(Jakiro.optionEul, "panorama/images/items/".."cyclone".."_png.vtex_c")
 
 Jakiro.optionCursor = Menu.AddOptionBool(mainPath, Translation.optionCursor[language], true)
 Menu.AddOptionIcon(Jakiro.optionCursor, "~/MenuIcons/cursor.png")
@@ -253,6 +261,8 @@ function Jakiro.OnUpdate()
 
 	local medallionofcourage = Jakiro.CheckItem("item_medallion_of_courage")
 
+	local eul = Jakiro.CheckItem("item_cyclone")
+
 
 --------------------------------------------------------------------------------
 
@@ -280,7 +290,21 @@ function Jakiro.OnUpdate()
 		local distance = ((Entity.GetOrigin(myHero) - (Entity.GetOrigin(enemy))):Length2D())
 		local origin = Entity.GetOrigin(enemy)
 
-		if Menu.IsEnabled(Jakiro.optionSheepStick) and Jakiro.ItemTarget(sheepstick, enemy, mana) == true then
+		if Menu.IsEnabled(Jakiro.optionEul) and Jakiro.ItemTarget(eul, enemy, mana) == true then
+			return
+		end
+		local modifierCyclone = NPC.GetModifier(enemy, 'modifier_eul_cyclone')	
+		if modifierCyclone then
+			local timer = Modifier.GetDieTime(modifierCyclone) - GameRules.GetGameTime()
+			if timer < (1.2 - NetChannel.GetAvgLatency(Enum.Flow.FLOW_OUTGOING)) then
+				if Jakiro.Ice(ice, origin, mana) then
+					return
+				end	
+			end
+			return 
+		end	
+
+		if Menu.IsEnabled(Jakiro.optionSheepStick) and not modifierCyclone and Jakiro.ItemTarget(sheepstick, enemy, mana) == true then
 			return
 		end	
 
@@ -303,8 +327,15 @@ function Jakiro.OnUpdate()
 		position =  Jakiro.GetPredictedPosition(enemy, 1.4)
 		if  atos and not Ability.IsReady(atos) then
 			position =  Jakiro.GetPredictedPosition(enemy, 0)
+		end
+		if not newpos then
+			newpos = Jakiro.GetPredictedPosition(enemy, 1.4)
 		end	
 		if  Menu.IsEnabled(Jakiro.optionIce) and Jakiro.Ice(ice, position, mana) == true then
+			if newpos and ((newpos - position):Length2D()) > 450  then
+				Player.PrepareUnitOrders(myPlayer, Enum.UnitOrder.DOTA_UNIT_ORDER_HOLD_POSITION, nil, Vector(0, 0, 0), nil, Enum.PlayerOrderIssuer.DOTA_ORDER_ISSUER_SELECTED_UNITS, myHero)
+				newpos = nil
+			end	
 			return
 		end
 
