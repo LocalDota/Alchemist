@@ -289,9 +289,19 @@ function Jakiro.OnUpdate()
 	if Menu.IsKeyDown(Jakiro.optionFullCombo) and enemy and (not NPC.IsChannellingAbility(myHero)) and (not NPC.GetModifier(enemy, "modifier_black_king_bar_immune")) and (not NPC.GetModifier(enemy, "modifier_life_stealer_rage")) and (not NPC.GetModifier(enemy, "modifier_juggernaut_blade_fury"))  then
 		local distance = ((Entity.GetOrigin(myHero) - (Entity.GetOrigin(enemy))):Length2D())
 		local origin = Entity.GetOrigin(enemy)
-		local modifierCyclone = NPC.GetModifier(enemy, 'modifier_eul_cyclone')	
+		local modifierCyclone = NPC.GetModifier(enemy, 'modifier_eul_cyclone')
 
-		if Menu.IsEnabled(Jakiro.optionSheepStick) and not modifierCyclone and Jakiro.ItemTarget(sheepstick, enemy, mana) == true then
+		if modifierCyclone then
+			local timer = Modifier.GetDieTime(modifierCyclone) - GameRules.GetGameTime()
+			if timer < (1.2 - NetChannel.GetAvgLatency(Enum.Flow.FLOW_OUTGOING)) then
+				if Jakiro.Ice(ice, origin, mana) then
+					return
+				end	
+			end
+			return 
+		end		
+
+		if Menu.IsEnabled(Jakiro.optionSheepStick) and ((Entity.GetOrigin(myHero) - Entity.GetOrigin(enemy)):Length2D()) < 800 and not modifierCyclone and Jakiro.ItemTarget(sheepstick, enemy, mana) == true then
 			return
 		end	
 
@@ -302,16 +312,6 @@ function Jakiro.OnUpdate()
 		if Menu.IsEnabled(Jakiro.optionEul) and not NPC.GetModifier(enemy, 'modifier_sheepstick_debuff') and not NPC.GetModifier(enemy, 'modifier_rod_of_atos_debuff') and not NPC.IsStunned(enemy) and Jakiro.ItemTarget(eul, enemy, mana) == true then
 			return
 		end
-
-		if modifierCyclone then
-			local timer = Modifier.GetDieTime(modifierCyclone) - GameRules.GetGameTime()
-			if timer < (1.2 - NetChannel.GetAvgLatency(Enum.Flow.FLOW_OUTGOING)) then
-				if Jakiro.Ice(ice, origin, mana) then
-					return
-				end	
-			end
-			return 
-		end	
 
 		if Menu.IsEnabled(Jakiro.optionBloodthorn) and (not NPC.GetModifier(enemy, "modifier_bloodthorn_debuff")) and Jakiro.ItemTarget(bloodthorn, enemy, mana) == true then
 			return
