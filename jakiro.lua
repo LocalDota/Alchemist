@@ -301,7 +301,7 @@ function Jakiro.OnUpdate()
 			return 
 		end		
 
-		if Menu.IsEnabled(Jakiro.optionSheepStick) and ((Entity.GetOrigin(myHero) - Entity.GetOrigin(enemy)):Length2D()) < 800 and not modifierCyclone and Jakiro.ItemTarget(sheepstick, enemy, mana) == true then
+		if Menu.IsEnabled(Jakiro.optionSheepStick) and ((Entity.GetOrigin(myHero) - Entity.GetOrigin(enemy)):Length2D()) < 800 and not NPC.IsStunned(enemy) and not modifierCyclone and Jakiro.ItemTarget(sheepstick, enemy, mana) == true then
 			return
 		end	
 
