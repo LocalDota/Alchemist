@@ -452,28 +452,28 @@ end
 --Функции способностей
 
 function Jakiro.Dual(ability, mana, enemy)
-	if Menu.IsEnabled(Jakiro.optionDual) and Ability.IsReady(ability) and Ability.IsCastable(ability, mana) then
+	if Menu.IsEnabled(Jakiro.optionDual) and Ability.IsReady(ability) and Ability.IsCastable(ability, mana) and not Ability.IsInAbilityPhase(ability) then
     	Ability.CastTarget(ability, enemy)
     	return true 
     end	
 end
 
 function Jakiro.Ice(ability, origin, mana)
-	if Menu.IsEnabled(Jakiro.optionIce) and Ability.IsReady(ability) and Ability.IsCastable(ability, mana)  then
+	if Menu.IsEnabled(Jakiro.optionIce) and Ability.IsReady(ability) and Ability.IsCastable(ability, mana) and not Ability.IsInAbilityPhase(ability)  then
     	Ability.CastPosition(ability, origin)
     	return true
     end	
 end
 
 function Jakiro.Liquid(ability, mana, enemy)
-	if Menu.IsEnabled(Jakiro.optionLiquid) and Ability.IsReady(ability) and Ability.IsCastable(ability, mana) then
+	if Menu.IsEnabled(Jakiro.optionLiquid) and Ability.IsReady(ability) and Ability.IsCastable(ability, mana) and not Ability.IsInAbilityPhase(ability) then
     	Ability.CastTarget(ability, enemy)
     	return true
     end	
 end
 
 function Jakiro.Macropyre(ability, origin, mana)
-	if Menu.IsEnabled(Jakiro.optionMacropyre) and Ability.IsReady(ability) and Ability.IsCastable(ability, mana)  then
+	if Menu.IsEnabled(Jakiro.optionMacropyre) and Ability.IsReady(ability) and Ability.IsCastable(ability, mana) and not Ability.IsInAbilityPhase(ability)  then
     	Ability.CastPosition(ability, origin)
     	return true
     end	
