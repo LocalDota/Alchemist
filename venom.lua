@@ -164,6 +164,9 @@ Menu.AddOptionIcon(Venomancer.optionSolar, "panorama/images/items/".."solar_cres
 Venomancer.optionMedalion = Menu.AddOptionBool(itemsPath, "Medalion of courage", true)
 Menu.AddOptionIcon(Venomancer.optionMedalion, "panorama/images/items/".."medallion_of_courage".."_png.vtex_c")
 
+Venomancer.optionAtos = Menu.AddOptionBool(itemsPath, "Rod of Atos", true)
+Menu.AddOptionIcon(Venomancer.optionAtos, "panorama/images/items/".."rod_of_atos".."_png.vtex_c")
+
 Venomancer.optionUrn = Menu.AddOptionBool(itemsPath, "Urn of shadows", true)
 Menu.AddOptionIcon(Venomancer.optionUrn, "panorama/images/items/".."urn_of_shadows".."_png.vtex_c")
 
@@ -248,6 +251,8 @@ function Venomancer.OnUpdate()
 
 	local spirit = Venomancer.CheckItem("item_spirit_vessel")
 
+	local atos = Venomancer.CheckItem("item_rod_of_atos")
+
 
 
 --------------------------------------------------------------------------------
@@ -288,6 +293,10 @@ function Venomancer.OnUpdate()
 			return
 		end	
 
+		if  Menu.IsEnabled(Venomancer.optionAtos) and not NPC.GetModifier(enemy, 'modifier_sheepstick_debuff') and Venomancer.ItemTarget(atos, enemy, mana) == true then
+			return
+		end	
+
 		if Menu.IsEnabled(Venomancer.optionBloodthorn) and (not NPC.GetModifier(enemy, "modifier_bloodthorn_debuff")) and Venomancer.ItemTarget(bloodthorn, enemy, mana) == true then
 			return
 		end
@@ -304,7 +313,12 @@ function Venomancer.OnUpdate()
 			return
 		end
 
-		if  Menu.IsEnabled(Venomancer.optionGale) and Venomancer.Gale(gale, origin, mana) == true then
+		position =  Venomancer.GetPredictedPosition(enemy, 0.7)
+		if  atos and not Ability.IsReady(atos) then
+			position =  Venomancer.GetPredictedPosition(enemy, 0)
+		end
+
+		if  Menu.IsEnabled(Venomancer.optionGale) and Venomancer.Gale(gale, position, mana) == true then
 			return
 		end
 
@@ -392,6 +406,21 @@ function Venomancer.OnDraw()
 	end
 end		
 ---------------------------------------------------------------------------------------------------
+
+
+
+
+
+--Предикшн
+function Venomancer.GetPredictedPosition(npc, delay)
+    local pos = Entity.GetAbsOrigin(npc)
+    if not NPC.IsRunning(npc) or not delay  then return pos end
+
+    local dir = Entity.GetRotation(npc):GetForward():Normalized()
+    local speed = NPC.GetMoveSpeed(npc)
+
+    return pos + dir:Scaled(speed * delay)
+end
 
 
 
