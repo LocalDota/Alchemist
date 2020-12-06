@@ -285,6 +285,7 @@ function Jakiro.OnUpdate()
 
 
 
+
 --Полное комбо
 
 	if Menu.IsKeyDown(Jakiro.optionFullCombo) and enemy and (not NPC.IsChannellingAbility(myHero)) and (not NPC.GetModifier(enemy, "modifier_black_king_bar_immune")) and (not NPC.GetModifier(enemy, "modifier_life_stealer_rage")) and (not NPC.GetModifier(enemy, "modifier_juggernaut_blade_fury"))  then
@@ -300,18 +301,36 @@ function Jakiro.OnUpdate()
 				end	
 			end
 			return 
-		end		
+		end
 
-		if Menu.IsEnabled(Jakiro.optionSheepStick) and ((Entity.GetOrigin(myHero) - Entity.GetOrigin(enemy)):Length2D()) < 800 and not NPC.IsStunned(enemy) and not modifierCyclone and Jakiro.ItemTarget(sheepstick, enemy, mana) == true then
-			return
-		end	
-
-		if  Menu.IsEnabled(Jakiro.optionAtos) and not NPC.GetModifier(enemy, 'modifier_sheepstick_debuff') and Jakiro.ItemTarget(atos, enemy, mana) == true then
-			return
-		end	
 
 		if Menu.IsEnabled(Jakiro.optionEul) and not NPC.GetModifier(enemy, 'modifier_sheepstick_debuff') and not NPC.GetModifier(enemy, 'modifier_rod_of_atos_debuff') and not NPC.IsStunned(enemy) and Jakiro.ItemTarget(eul, enemy, mana) == true then
 			return
+		end		
+
+		if Ability.SecondsSinceLastUse(ice) == -1 then
+			if Menu.IsEnabled(Jakiro.optionSheepStick) and ((Entity.GetOrigin(myHero) - Entity.GetOrigin(enemy)):Length2D()) < 800 and not NPC.IsStunned(enemy) and not modifierCyclone and Jakiro.ItemTarget(sheepstick, enemy, mana) == true then
+				return
+			end
+		else
+			if Ability.SecondsSinceLastUse(ice) > 0.8 then
+				if Menu.IsEnabled(Jakiro.optionSheepStick) and ((Entity.GetOrigin(myHero) - Entity.GetOrigin(enemy)):Length2D()) < 800 and not NPC.IsStunned(enemy) and not modifierCyclone and Jakiro.ItemTarget(sheepstick, enemy, mana) == true then
+					return
+				end	
+			end	
+		end			
+
+		if Ability.SecondsSinceLastUse(ice) == -1 then
+			if  Menu.IsEnabled(Jakiro.optionAtos) and not NPC.GetModifier(enemy, 'modifier_jakiro_ice_path_stun') and not NPC.GetModifier(enemy, 'modifier_sheepstick_debuff') and Jakiro.ItemTarget(atos, enemy, mana) == true then
+				return
+			end
+		else
+			if Ability.SecondsSinceLastUse(ice) > 0.8 then
+				if  Menu.IsEnabled(Jakiro.optionAtos) and not NPC.GetModifier(enemy, 'modifier_jakiro_ice_path_stun') and not NPC.GetModifier(enemy, 'modifier_sheepstick_debuff') and Jakiro.ItemTarget(atos, enemy, mana) == true then
+					log(Ability.SecondsSinceLastUse(ice))	
+					return
+				end	
+			end	
 		end
 
 		if Menu.IsEnabled(Jakiro.optionBloodthorn) and (not NPC.GetModifier(enemy, "modifier_bloodthorn_debuff")) and Jakiro.ItemTarget(bloodthorn, enemy, mana) == true then
