@@ -8,7 +8,13 @@ local Font = Renderer.LoadFont("Tahoma", 18, Enum.FontCreate.FONTFLAG_OUTLINE)
 --------------------------------------------------
 --Задержка
 local lastMoveOrder = 0
-local orderDelay = 0.1 
+local orderDelay = 0.3 
+
+local lastMoveOrder2 = 0
+local orderDelay2 = 1 
+
+local lastMoveOrder3 = 0
+local orderDelay3 = 0.3 
 
 function Druid.SleepReady(sleep, lastTick)
     return (os.clock() - lastTick) >= sleep 
@@ -428,7 +434,7 @@ function Druid.OnUpdate()
 
 	for index, npc in pairs(NPCs.GetAll()) do
 		for i = 1, 4 do 
-			if NPC.GetUnitName(npc) == ("npc_dota_lone_druid_bear" .. i) then
+			if NPC.GetUnitName(npc) == ("npc_dota_lone_druid_bear" .. i) and Entity.GetOwner(npc) == myHero then
 				bear = npc
 			end
  		end		
@@ -565,45 +571,47 @@ function Druid.OnUpdate()
 				return
 			end
 		end
-		if Menu.IsEnabled(Druid.optionBearGuard)  then
-			local nearestHero = Druid.FindNearestHero(myHero) 
+		if Druid.SleepReady(orderDelay2, lastMoveOrder2) then
+			if Menu.IsEnabled(Druid.optionBearGuard)  then
+				local nearestHero = Druid.FindNearestHero(myHero) 
 
-			if nearestHero and bear then
-				if ((Entity.GetOrigin(nearestHero) - Entity.GetOrigin(myHero)):Length2D()) < 1100 and (100/(Entity.GetMaxHealth(bear)/Entity.GetHealth(bear))) > 50 then
-					for index, ent in pairs(Entity.GetUnitsInRadius(nearestHero, 700, Enum.TeamType.TEAM_FRIEND)) do
-						if  NPC.IsTower(ent)  then
-							tower = ent
-						end	
-						if tower and ((Entity.GetOrigin(myHero) - Entity.GetOrigin(tower)):Length2D()) < 700 then
-							Player.AttackTarget(myPlayer, bear, nearestHero)
+				if nearestHero and bear then
+					if ((Entity.GetOrigin(nearestHero) - Entity.GetOrigin(myHero)):Length2D()) < 1100 and (100/(Entity.GetMaxHealth(bear)/Entity.GetHealth(bear))) > 50 then
+						for index, ent in pairs(Entity.GetUnitsInRadius(nearestHero, 700, Enum.TeamType.TEAM_FRIEND)) do
+							if  NPC.IsTower(ent)  then
+								tower = ent
+							end	
+							if tower and ((Entity.GetOrigin(myHero) - Entity.GetOrigin(tower)):Length2D()) < 700 then
+								Player.AttackTarget(myPlayer, bear, nearestHero)
+							end
+							if tower and ((Entity.GetOrigin(bear) - Entity.GetOrigin(myHero)):Length2D()) > 400 and ((Entity.GetOrigin(myHero) - Entity.GetOrigin(tower)):Length2D()) > 700 then
+								NPC.MoveTo(bear, Entity.GetOrigin(myHero))
+							end
+							if tower and ((Entity.GetOrigin(nearestHero) - Entity.GetOrigin(tower)):Length2D()) > 700 then
+								tower = nil
+							end		
+							if not tower then
+								Player.AttackTarget(myPlayer, bear, nearestHero)
+							end
 						end
-						if tower and ((Entity.GetOrigin(bear) - Entity.GetOrigin(myHero)):Length2D()) > 400 and ((Entity.GetOrigin(myHero) - Entity.GetOrigin(tower)):Length2D()) > 700 then
-							NPC.MoveTo(bear, Entity.GetOrigin(myHero))
-						end
-						if tower and ((Entity.GetOrigin(nearestHero) - Entity.GetOrigin(tower)):Length2D()) > 700 then
-							tower = nil
-						end		
-						if not tower then
-							Player.AttackTarget(myPlayer, bear, nearestHero)
-						end
-					end
-                else
-                    if ((Entity.GetOrigin(bear) - Entity.GetOrigin(myHero)):Length2D()) > 400 then  
-                        NPC.MoveTo(bear, Entity.GetOrigin(myHero))
-                    end    
+	                else
+	                    if ((Entity.GetOrigin(bear) - Entity.GetOrigin(myHero)):Length2D()) > 400 then  
+	                        NPC.MoveTo(bear, Entity.GetOrigin(myHero))
+	                    end    
+					end	
+				end
+				if bear and (not nearestHero) and ((Entity.GetOrigin(bear) - Entity.GetOrigin(myHero)):Length2D()) > 400 then	
+					NPC.MoveTo(bear, Entity.GetOrigin(myHero))
 				end	
 			end
-			if bear and (not nearestHero) and ((Entity.GetOrigin(bear) - Entity.GetOrigin(myHero)):Length2D()) > 400 then	
-				NPC.MoveTo(bear, Entity.GetOrigin(myHero))
-			end		
-		end
+			lastMoveOrder2 = os.clock()	
+		end	
 		if Menu.IsEnabled(Druid.optionMomGuard) and bear and NPC.IsAttacking(bear) then
 			if Menu.IsEnabled(Druid.optionMaskOfMadnessB)  and Druid.ItemNoTarget(maskofmadnessB, manaB) == true then
 				return
 			end
 		end		
 	end
-
 				
 ---------------------------------------------------------------------------------------------------------------------------------------
 
@@ -812,14 +820,17 @@ function Druid.OnUpdate()
 
 --Преследовать курсор
 	if Menu.IsEnabled(Druid.optionCursor) then
-		if Menu.IsKeyDown(Druid.optionFullCombo) and (not enemy) and bear and (not NPC.IsChannellingAbility(myHero)) and (not NPC.IsChannellingAbility(bear)) then
-			NPC.MoveTo(myHero, Input.GetWorldCursorPos())
-			NPC.MoveTo(bear, Input.GetWorldCursorPos())		
-		end	
+		if Druid.SleepReady(orderDelay3, lastMoveOrder3) then
+			if Menu.IsKeyDown(Druid.optionFullCombo) and (not enemy) and bear and (not NPC.IsChannellingAbility(myHero)) and (not NPC.IsChannellingAbility(bear)) then
+				NPC.MoveTo(myHero, Input.GetWorldCursorPos())
+				NPC.MoveTo(bear, Input.GetWorldCursorPos())		
+			end	
 
-		if Menu.IsKeyDown(Druid.optionComboB) and (not enemy) and bear and (not NPC.IsChannellingAbility(bear)) then
-			NPC.MoveTo(bear, Input.GetWorldCursorPos())	
-		end
+			if Menu.IsKeyDown(Druid.optionComboB) and (not enemy) and bear and (not NPC.IsChannellingAbility(bear)) then
+				NPC.MoveTo(bear, Input.GetWorldCursorPos())	
+			end
+			lastMoveOrder3 = os.clock()
+		end	
 	end		
 end	
 
