@@ -127,6 +127,11 @@ local Translation = {
         [EN] = "Strike before combo",
         [CN] = "",
     },
+    ["optionArmlet"] = {
+        [RU] = "Выключать после комбо",
+        [EN] = "Disable after combo",
+        [CN] = "",
+    },
 }
 
 
@@ -196,6 +201,9 @@ Menu.AddOptionIcon(Sven.optionSatanicSlider, "panorama/images/items/satanic_png.
 
 Sven.optionHit = Menu.AddOptionBool(itemsPath, Translation.optionHit[language], true)
 Menu.AddOptionIcon(Sven.optionHit, "panorama/images/items/silver_edge_png.vtex_c")
+
+Sven.optionArmlet = Menu.AddOptionBool(itemsPath, Translation.optionArmlet[language], true)
+Menu.AddOptionIcon(Sven.optionArmlet, "panorama/images/items/armlet_png.vtex_c")
 ---------------------------------------------------------------------------------------------------------------------------
 Sven.optionStorm = Menu.AddOptionBool(skillsPath, "Storm Hammer", true)
 Menu.AddOptionIcon(Sven.optionStorm, "panorama/images/spellicons/".."sven_storm_bolt".."_png.vtex_c")
@@ -401,12 +409,12 @@ function Sven.OnUpdate()
             return
         end
 
-        if  (Menu.IsSelected(Sven.itemsSelection, "abyssal")) and not NPC.IsStunned(enemy) and Sven.ItemTarget(abyssal, enemy, mana) == true then
+        if  (Menu.IsSelected(Sven.itemsSelection, "abyssal")) and Ability.SecondsSinceLastUse(storm) > 0.5 and not NPC.IsStunned(enemy) and Sven.ItemTarget(abyssal, enemy, mana) == true then
             return
         end
 
         if satanic and (100/(Entity.GetMaxHealth(myHero)/Entity.GetHealth(myHero))) < Menu.GetValue(Sven.optionSatanicSlider) then
-            if (Menu.IsSelected(Sven.itemsSelection, "satanic")) and  Sven.ItemNoTarget(satanic, mana) == true then
+            if (Menu.IsSelected(Sven.itemsSelection, "satanic")) and not NPC.GetModifier(enemy, "modifier_oracle_false_promise") and  Sven.ItemNoTarget(satanic, mana) == true then
                 return
             end
         end 
@@ -522,7 +530,14 @@ function Sven.OnUpdate()
 
 
     if not Menu.IsKeyDown(Sven.optionFullCombo) and not Menu.IsKeyDown(Sven.optionCombo) then
-        accept = nil
+        if Menu.IsEnabled(Sven.optionArmlet) then
+            if Ability.GetToggleState(armlet) and accept then
+                Ability.Toggle(armlet)
+                accept = nil
+            end    
+        else    
+            accept = nil
+        end    
     end    
 end
 
