@@ -27,7 +27,10 @@ local lastMoveOrder5 = 0
 local orderDelay5 = 1
 
 local lastMoveOrder6 = 0
-local orderDelay6 = 3  
+local orderDelay6 = 3 
+
+local lastMoveOrder7 = 0
+local orderDelay7 = 0.1
 
 function OD.SleepReady(sleep, lastTick)
     return (os.clock() - lastTick) >= sleep 
@@ -336,7 +339,6 @@ function OD.OnUpdate()
     if enemy and enemy ~= Input.GetNearestHeroToCursor(Entity.GetTeamNum(myHero), Enum.TeamType.TEAM_ENEMY) then
         enemy = nil
     end
-
 ---------------------------------------------------------------------------------------------------
 
 --Полное комбо
@@ -366,12 +368,19 @@ function OD.OnUpdate()
             for i = 1, #TableLinken do
                 local item = items[TableLinken[i]]
                 if (Menu.IsSelected(OD.linkenSelection, TableLinken[i])) then
-                    if OD.Breaker(item, enemy, mana) == true then
-                        return
-                    end     
+                	if OD.SleepReady(orderDelay7, lastMoveOrder7) then
+                    	if OD.Breaker(item, enemy, mana) == true then
+                    	    return
+                    	end 
+                    	lastMoveOrder7 = os.clock()
+                    end	    
                 end
             end  
-        end 
+        end
+
+        if NPC.IsLinkensProtected(enemy) then 
+        	return
+        end	
 
         if scepter or NPC.GetModifier(myHero, "modifier_item_ultimate_scepter_consumed") then
             if Menu.IsEnabled(OD.optionCurrent) then
