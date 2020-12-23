@@ -1,6 +1,6 @@
 local Aggro = {}
 
-local myHero, myPlayer, enemy = nil, nil, nil
+local myHero, myPlayer, enemy, mySide = nil, nil, nil, nil
 
 
 
@@ -102,10 +102,15 @@ function Aggro.OnUpdate()
         myPlayer = Players.GetLocal()
         return
     end
+
+    if (not mySide) then
+		mySide = Entity.GetTeamNum(myPlayer)
+		return
+	end
    
 
     if Menu.IsKeyDownOnce(Aggro.optionAggro) then
-    	local nearestHero = Aggro.FindNearestHero(myHero)
+    	local nearestHero = Input.GetNearestHeroToCursor(mySide, Enum.TeamType.TEAM_ENEMY)
     	if nearestHero and NPC.IsVisible(nearestHero) then
     		Player.PrepareUnitOrders(myPlayer, Enum.UnitOrder.DOTA_UNIT_ORDER_ATTACK_TARGET, nearestHero, Vector(0, 0, 0), nil, Enum.PlayerOrderIssuer.DOTA_ORDER_ISSUER_SELECTED_UNITS, myHero)
     		Player.PrepareUnitOrders(myPlayer, Enum.UnitOrder.DOTA_UNIT_ORDER_HOLD_POSITION, nil, Vector(0, 0, 0), nil, Enum.PlayerOrderIssuer.DOTA_ORDER_ISSUER_SELECTED_UNITS, myHero)
@@ -119,6 +124,7 @@ function Aggro.OnUpdate()
     	for i, ent in pairs(tableEnemy) do
 			if NPC.IsTower(ent) then
 				tower = ent
+				break
 			end	
 		end
 		if tower then
@@ -142,22 +148,6 @@ end
 
 
 
-function Aggro.FindNearestHero(myHero)
-	local enemyNew2, enemyNewDistance, enemyNewDistance2 = nil, nil, 99999999999
-
-	if Entity.IsAlive(myHero) then 
-		for index, hero in pairs(Heroes.GetAll()) do
-			if (not Entity.IsSameTeam(hero, myHero)) then
-				enemyNewDistance = ((Entity.GetOrigin(myHero) - Entity.GetOrigin(hero)):Length2D())
-				if enemyNewDistance < enemyNewDistance2   then
-					enemyNewDistance2 = enemyNewDistance 
-					enemyNew2 = hero
-				end	
-			end		
-		end
-		return enemyNew2
-	end	
-end	
 
 function Aggro.NearestTower(entity, table, myHero)
 	local creepNew2, creepNewDistance, creepNewDistance2 = nil, nil, 9999999999
@@ -185,6 +175,24 @@ function Aggro.Nearest(table, myHero)
         end 
     end
     return unitNew2    
-end 		
+end 
+
+
+
+function Aggro.OnEntityDestroy(entity)
+    if not myHero then 
+        return
+    end 
+
+    if entity == myHero then
+        Aggro.Reinit()
+        return
+    end 
+end 
+
+function Aggro.Reinit()
+    myHero, myPlayer, enemy, mySide = nil, nil, nil, nil
+end 
+
 
 return Aggro
