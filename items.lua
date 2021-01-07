@@ -72,12 +72,6 @@ Items.optionArcaneRing = Menu.AddOptionBool(mainPath, "Acrane Ring", false)
 Menu.AddOptionIcon(Items.optionArcaneRing, "panorama/images/items/".."arcane_ring".."_png.vtex_c")
 
 
-
-Items.optionIronTalon = Menu.AddOptionBool(mainPath, "Iron Talon", false)
-Menu.AddOptionIcon(Items.optionIronTalon, "panorama/images/items/".."iron_talon".."_png.vtex_c")
-
-
-
 Items.optionSpiderLegs = Menu.AddOptionBool(mainPath, "Spider Legs", false)
 Menu.AddOptionIcon(Items.optionSpiderLegs, "panorama/images/items/".."spider_legs".."_png.vtex_c")
 
@@ -129,9 +123,6 @@ function Items.OnUpdate()
 	local arcanering = NPC.GetItem(myHero, "item_arcane_ring")
 
 
-	local irontalon = NPC.GetItem(myHero, "item_iron_talon")
-
-
 	local spiderlegs = NPC.GetItem(myHero, "item_spider_legs")
 
 
@@ -153,21 +144,6 @@ function Items.OnUpdate()
 			else
 				Ability.CastNoTarget(arcanering)
 			end		
-		end	
-
-		local table_radius_talon = Entity.GetUnitsInRadius(myHero, 350, Enum.TeamType.TEAM_ENEMY)
-		if Menu.IsEnabled(Items.optionIronTalon) and irontalon and  Item.IsItemEnabled(irontalon) and (not NPC.IsChannellingAbility(myHero))  and #table_radius_talon > 0 and #Entity.GetHeroesInRadius(myHero, 1500, Enum.TeamType.TEAM_ENEMY) == 0 and Entity.GetHealth(myHero) > 150 and Ability.IsReady(irontalon) and NPC.GetItemByIndex(myHero, 16) == irontalon and not NPC.HasState(myHero, Enum.ModifierState.MODIFIER_STATE_INVISIBLE) then
-			for index, unit in pairs(table_radius_talon) do
-				if Entity.GetHealth(unit) > 550 then
-					if tp then
-						if (not Ability.IsChannelling(tp)) then
-							Ability.CastTarget(irontalon, unit)
-						end	
-					else
-						Ability.CastTarget(irontalon, unit)
-					end		
-				end		
-			end
 		end	
 
 		if Menu.IsEnabled(Items.optionSpiderLegs) and spiderlegs and  Item.IsItemEnabled(spiderlegs) and (not NPC.IsChannellingAbility(myHero))  and Ability.IsReady(spiderlegs) and NPC.GetItemByIndex(myHero, 16) == spiderlegs and NPC.IsRunning(myHero) and not NPC.HasState(myHero, Enum.ModifierState.MODIFIER_STATE_INVISIBLE) then
