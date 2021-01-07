@@ -542,7 +542,7 @@ function Druid.OnUpdate()
 		local table_radius_midas = Entity.GetUnitsInRadius(bear, 600, Enum.TeamType.TEAM_ENEMY)
 		if Menu.IsEnabled(Druid.optionAutoMidasB) and (not NPC.IsChannellingAbility(bear))  and #table_radius_midas > 0   and Ability.IsReady(midasB)  and not NPC.HasState(bear, Enum.ModifierState.MODIFIER_STATE_INVISIBLE) then
 			for index, unit in pairs(table_radius_midas) do 
-				if Entity.GetMaxHealth(unit) > 550 and NPC.IsCreep(unit) then
+				if Entity.GetMaxHealth(unit) > 550 and NPC.IsCreep(unit) and not NPC.IsAncient(unit) then
 					if tp then
 						if (not Ability.IsChannelling(tp)) then
 							Ability.CastTarget(midasB, unit)
