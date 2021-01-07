@@ -27,6 +27,15 @@ local fountainTable_3 = {
 local lastMoveOrder = 0
 local orderDelay = 1 -- 1сек
 
+local lastMoveOrder2 = 0
+local orderDelay2 = 0.1 
+
+local lastMoveOrder3 = 0
+local orderDelay3 = 0.1 
+
+local lastMoveOrder4 = 0
+local orderDelay4 = 3 
+
 function Economy.SleepReady(sleep, lastTick)
     return (os.clock() - lastTick) >= sleep 
 end
@@ -114,14 +123,6 @@ Menu.AddOptionIcon(Economy.optionEconomyCourier, "panorama/images/spellicons/"..
 
 
 
-Economy.optionMango = Menu.AddOptionBool(mainPath, Translation.optionMango[language], false)
-Menu.AddOptionIcon(Economy.optionMango, "panorama/images/items/".."enchanted_mango".."_png.vtex_c")
-Economy.optionSlider = Menu.AddOptionSlider(mainPath, Translation.optionSlider[language], 1, 9, 3)
-Menu.AddOptionIcon(Economy.optionSlider, "~/MenuIcons/edit.png")
-
-
-
-
 Economy.optionAutoBurst = Menu.AddOptionBool(mainPath, Translation.optionAutoBurst[language], false)
 Menu.AddOptionIcon(Economy.optionAutoBurst, "panorama/images/spellicons/".."courier_burst".."_png.vtex_c")
 
@@ -132,8 +133,6 @@ Menu.AddOptionIcon(Economy.optionAutoShield, "panorama/images/spellicons/".."cou
 
 
 --------------------------------------------------------------------------------------------------------------
-local courierIsFull = false
-local lastSum = 0
 
 --Основная функция
 function Economy.OnUpdate()
@@ -185,49 +184,58 @@ function Economy.OnUpdate()
 	end	
 --------------------------------------------------------------------------------------------------------------------------
 --Авто-Щит 
-	if  Menu.IsEnabled(Economy.optionAutoShield) then
-		if Ability.IsReady(shield) and Ability.GetLevel(shield) > 0 then
-			for index, ent in pairs(Entity.GetUnitsInRadius(myCourier, 700, Enum.TeamType.TEAM_ENEMY)) do
-				if NPC.IsTower(ent) then
-					Ability.CastNoTarget(shield)
+	if Economy.SleepReady(orderDelay2, lastMoveOrder2) then
+		if  Menu.IsEnabled(Economy.optionAutoShield) then
+			if Ability.IsReady(shield) and Ability.GetLevel(shield) > 0 then
+				for index, ent in pairs(Entity.GetUnitsInRadius(myCourier, 700, Enum.TeamType.TEAM_ENEMY)) do
+					if NPC.IsTower(ent) then
+						Ability.CastNoTarget(shield)
+					end
+					return	
 				end
-				return	
+				if #Entity.GetHeroesInRadius(myCourier, 700, Enum.TeamType.TEAM_ENEMY) ~= 0 then
+					Ability.CastNoTarget(shield)
+				end		
 			end
-			if #Entity.GetHeroesInRadius(myCourier, 700, Enum.TeamType.TEAM_ENEMY) ~= 0 then
-				Ability.CastNoTarget(shield)
-			end		
 		end
-	end
+		lastMoveOrder2 = os.clock()
+	end	
 
 -----------------------------------------------------------------------------------------------------------------------	
 --Авто-Ускорение
-	if	Menu.IsEnabled(Economy.optionAutoBurst) then
-		if #Entity.GetHeroesInRadius(myCourier, 700, Enum.TeamType.TEAM_ENEMY) ~= 0 and Ability.IsReady(burst) and Ability.GetLevel(burst) > 0 then
-			Ability.CastNoTarget(burst)
-		end
-	end
---------------------------------------------------------------------------------------------------------------------------
---Лечим куру если ранена
-	if Entity.GetHealth(myCourier) < Entity.GetMaxHealth(myCourier) and ((Entity.GetOrigin(myCourier) - fountainTable_2[mySide]):Length2D()) < 1600 and (Courier.GetCourierState(myCourier) == Enum.CourierState.COURIER_STATE_IDLE) then
-		NPC.MoveTo(myCourier, fountainTable[mySide])
-	end
-
-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
---Считаем манго в куре. Отправляем домой, когда кура полная.
-
-	local sumCurrent = 0
-	for i = 0, 8 do
-		local itemAbilityCourier = NPC.GetItemByIndex(myCourier, i)
-		if itemAbilityCourier then
-			if Ability.GetName(itemAbilityCourier) == "item_enchanted_mango" then
-				sumCurrent = sumCurrent + Item.GetCurrentCharges(itemAbilityCourier)
+	if Economy.SleepReady(orderDelay3, lastMoveOrder3) then
+		if	Menu.IsEnabled(Economy.optionAutoBurst) then
+			if #Entity.GetHeroesInRadius(myCourier, 700, Enum.TeamType.TEAM_ENEMY) ~= 0 and Ability.IsReady(burst) and Ability.GetLevel(burst) > 0 then
+				Ability.CastNoTarget(burst)
 			end
 		end
-	end
-	if lastSum < (sumCurrent / 3) and (sumCurrent / 3) >= Menu.GetValue(Economy.optionSlider) then
-		NPC.MoveTo(myCourier, fountainTable_2[mySide])
-	end
-	lastSum = (sumCurrent / 3);
+		lastMoveOrder3 = os.clock()
+	end	
+--------------------------------------------------------------------------------------------------------------------------
+--Лечим куру если ранена
+	if Economy.SleepReady(orderDelay4, lastMoveOrder4) then
+		if Entity.GetHealth(myCourier) < Entity.GetMaxHealth(myCourier) and ((Entity.GetOrigin(myCourier) - fountainTable_2[mySide]):Length2D()) < 1600 and (Courier.GetCourierState(myCourier) == Enum.CourierState.COURIER_STATE_IDLE) then
+			NPC.MoveTo(myCourier, fountainTable[mySide])
+		end
+		lastMoveOrder4 = os.clock()
+	end	
+
+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+----Считаем манго в куре. Отправляем домой, когда кура полная.
+--
+--	local sumCurrent = 0
+--	for i = 0, 8 do
+--		local itemAbilityCourier = NPC.GetItemByIndex(myCourier, i)
+--		if itemAbilityCourier then
+--			if Ability.GetName(itemAbilityCourier) == "item_enchanted_mango" then
+--				sumCurrent = sumCurrent + Item.GetCurrentCharges(itemAbilityCourier)
+--			end
+--		end
+--	end
+--	if lastSum < (sumCurrent / 3) and (sumCurrent / 3) >= Menu.GetValue(Economy.optionSlider) then
+--		NPC.MoveTo(myCourier, fountainTable_2[mySide])
+--	end
+--	lastSum = (sumCurrent / 3);
 ------------------------------------------------------------------------------------------------------------------------------	
 --Если кура стоит на базе без дела, то домой
 	--if Menu.IsEnabled(Economy.optionMango) then
@@ -240,29 +248,29 @@ function Economy.OnUpdate()
 ------------------------------------------------------------------------------------------------------------------------------------------------------
 	
 -----------------------------------------------------------------------------------------------------------------------------------------------------
---Перебераем все лежащие предметы, потом если он является предметом тогда создаем переменные с данными предмета и подбираем предмет курой
-	if Menu.IsEnabled(Economy.optionMango) then
-		if (Courier.GetCourierState(myCourier) == Enum.CourierState.COURIER_STATE_IDLE) or (Courier.GetCourierState(myCourier) == Enum.CourierState.COURIER_STATE_AT_BASE) then
-			for index, ent in pairs(PhysicalItems.GetAll()) do
-				if Entity.IsAbility(PhysicalItem.GetItem(ent)) then
-					local itemAbility = PhysicalItem.GetItem(ent)
-					local mango = Ability.GetName(itemAbility)
-					local origin = Entity.GetAbsOrigin(ent)
-					originL = Entity.GetAbsOrigin(ent)
-					if mango == "item_enchanted_mango" and ((origin - fountainTable_2[mySide]):Length2D()) < 2000 and #Heroes.InRadius(fountainTable[mySide], 3500, mySide, Enum.TeamType.TEAM_ENEMY) == 0 and (sumCurrent / 3) < Menu.GetValue(Economy.optionSlider) and ((Entity.GetOrigin(myCourier) - fountainTable_2[mySide]):Length2D()) < 2000 and ((fountainTable_3[mySide] - origin):Length2D()) > 1050  then
-						NPC.MoveTo(myCourier, origin)	
-						Player.PrepareUnitOrders(myPlayer, Enum.UnitOrder.DOTA_UNIT_ORDER_PICKUP_ITEM, ent, origin, nil, Enum.PlayerOrderIssuer.DOTA_ORDER_ISSUER_PASSED_UNIT_ONLY, myCourier)
-						return
-					end	
-				end	
-			end
-		end
-	end	
-	if originL then
-		if ((Entity.GetOrigin(myCourier) - originL):Length2D()) < 1 and (Courier.GetCourierState(myCourier) == Enum.CourierState.COURIER_STATE_IDLE) then
-			Economy.Move_2(myCourier)
-		end
-	end
+----Перебераем все лежащие предметы, потом если он является предметом тогда создаем переменные с данными предмета и подбираем предмет курой
+--	if Menu.IsEnabled(Economy.optionMango) then
+--		if (Courier.GetCourierState(myCourier) == Enum.CourierState.COURIER_STATE_IDLE) or (Courier.GetCourierState(myCourier) == Enum.CourierState.COURIER_STATE_AT_BASE) then
+--			for index, ent in pairs(PhysicalItems.GetAll()) do
+--				if Entity.IsAbility(PhysicalItem.GetItem(ent)) then
+--					local itemAbility = PhysicalItem.GetItem(ent)
+--					local mango = Ability.GetName(itemAbility)
+--					local origin = Entity.GetAbsOrigin(ent)
+--					originL = Entity.GetAbsOrigin(ent)
+--					if mango == "item_enchanted_mango" and ((origin - fountainTable_2[mySide]):Length2D()) < 2000 and #Heroes.InRadius(fountainTable[mySide], 3500, mySide, Enum.TeamType.TEAM_ENEMY) == 0 and (sumCurrent / 3) < Menu.GetValue(Economy.optionSlider) and ((Entity.GetOrigin(myCourier) - fountainTable_2[mySide]):Length2D()) < 2000 and ((fountainTable_3[mySide] - origin):Length2D()) > 1050  then
+--						NPC.MoveTo(myCourier, origin)	
+--						Player.PrepareUnitOrders(myPlayer, Enum.UnitOrder.DOTA_UNIT_ORDER_PICKUP_ITEM, ent, origin, nil, Enum.PlayerOrderIssuer.DOTA_ORDER_ISSUER_PASSED_UNIT_ONLY, myCourier)
+--						return
+--					end	
+--				end	
+--			end
+--		end
+--	end	
+--	if originL then
+--		if ((Entity.GetOrigin(myCourier) - originL):Length2D()) < 1 and (Courier.GetCourierState(myCourier) == Enum.CourierState.COURIER_STATE_IDLE) then
+--			Economy.Move_2(myCourier)
+--		end
+--	end
 end	
 -------------------------------------------------------------------------------------------------------------------------
 
