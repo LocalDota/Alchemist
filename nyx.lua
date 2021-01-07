@@ -8,6 +8,12 @@ local myHero, myPlayer, enemy, impale, burn, carapace, vendetta = nil, nil, nil,
 local lastMoveOrder = 0
 local orderDelay = 0.1 
 
+local lastMoveOrder2 = 0
+local orderDelay2 = 0.1 
+
+local lastMoveOrder3 = 0
+local orderDelay3 = 0.1
+
 function Nyx.SleepReady(sleep, lastTick)
     return (os.clock() - lastTick) >= sleep 
 end
@@ -298,10 +304,11 @@ function Nyx.OnUpdate()
 ---------------------------------------------------------------------------------------------------
 	
 --Преследовать курсор
-	if Menu.IsEnabled(Nyx.optionCursor) then
+	if  Nyx.SleepReady(orderDelay3, lastMoveOrder3) and Menu.IsEnabled(Nyx.optionCursor) then
 		if Menu.IsKeyDown(Nyx.optionFullCombo) and (not enemy) and (not NPC.IsChannellingAbility(myHero)) then
 			NPC.MoveTo(myHero, Input.GetWorldCursorPos())	
 		end
+		lastMoveOrder3 = os.clock()
 	end	
 
 	
@@ -410,9 +417,9 @@ function Nyx.OnUpdate()
 				return
 			end
 		else
-			if Nyx.SleepReady(orderDelay, lastMoveOrder)  then
+			if Nyx.SleepReady(orderDelay2, lastMoveOrder2)  then
 				Player.AttackTarget(myPlayer, myHero, enemy)
-				lastMoveOrder = os.clock()
+				lastMoveOrder2 = os.clock()
 			end
 
 			local distance = ((Entity.GetOrigin(myHero) - (Entity.GetOrigin(enemy))):Length2D())
