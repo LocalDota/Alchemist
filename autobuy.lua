@@ -83,4 +83,22 @@ function Autobuy.OnUpdate()
     end			
 end
 
+
+
+
+function Autobuy.OnEntityDestroy(entity)
+    if not myHero then 
+        return
+    end 
+
+    if entity == myHero then
+        Autobuy.Reinit()
+        return
+    end 
+end 
+
+function Autobuy.Reinit()
+    myHero, myPlayer = nil, nil
+end 
+
 return Autobuy
