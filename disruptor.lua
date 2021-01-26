@@ -534,7 +534,7 @@ function Disruptor.OnUpdate()
         	end
         	return 
         end
-        log(accept)
+
         if Ability.IsReady(kinetic) and Ability.IsCastable(kinetic, mana) and not accept and (Menu.IsSelected(Disruptor.skillsSelection, "glimpse")) and Disruptor.Glimpse(glimpse, mana, enemy) == true then
             return
         end	
