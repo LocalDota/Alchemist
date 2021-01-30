@@ -18,7 +18,7 @@ local ToggleKey = Menu.AddKeyOption({ "Utility", "Custom range radiuses", "Prese
 Menu.AddOptionIcon(ToggleKey, "~/MenuIcons/status.png")
 local enableslider1 = Menu.AddOptionBool({ "Utility", "Custom range radiuses", "Preset 1" }, "Enable radius", false)
 Menu.AddOptionIcon(enableslider1, "~/MenuIcons/enable/enable_ios.png")
-local slider1 = Menu.AddOptionSlider({ "Utility", "Custom range radiuses", "Preset 1" }, "Radius range", 100, 5000, 100)
+local slider1 = Menu.AddOptionSlider({ "Utility", "Custom range radiuses", "Preset 1" }, "Radius range", 100, 10000, 100)
 Menu.AddOptionIcon(slider1, "~/MenuIcons/edit.png")
 local color1 = Menu.AddOptionColorPicker({ "Utility", "Custom range radiuses", "Preset 1" }, "Radius color", 255, 255, 255, 255)
 
@@ -44,7 +44,7 @@ local color4 = Menu.AddOptionColorPicker({ "Utility", "Custom range radiuses", "
 
 local enableslider5 = Menu.AddOptionBool({ "Utility", "Custom range radiuses", "Preset 5" }, "Enable radius", false)
 Menu.AddOptionIcon(enableslider5, "~/MenuIcons/enable/enable_ios.png")
-local slider5 = Menu.AddOptionSlider({ "Utility", "Custom range radiuses", "Preset 5" }, "Radius range", 100, 10000, 100)
+local slider5 = Menu.AddOptionSlider({ "Utility", "Custom range radiuses", "Preset 5" }, "Radius range", 100, 5000, 100)
 Menu.AddOptionIcon(slider5, "~/MenuIcons/edit.png")
 local color5 = Menu.AddOptionColorPicker({ "Utility", "Custom range radiuses", "Preset 5" }, "Radius color", 255, 255, 255, 255)
 
