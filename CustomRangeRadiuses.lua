@@ -49,6 +49,34 @@ Menu.AddOptionIcon(slider5, "~/MenuIcons/edit.png")
 local color5 = Menu.AddOptionColorPicker({ "Utility", "Custom range radiuses", "Preset 5" }, "Radius color", 255, 255, 255, 255)
 
 
+function CRR.OnUpdate()
+	if not scriptEnable then
+        return
+    end
+
+    if (not myHero) then
+        myHero = Heroes.GetLocal()
+        return
+    end
+
+	if Menu.IsKeyDownOnce(ToggleKey) then
+		if Menu.IsEnabled(enableslider1) == true then
+			Menu.SetEnabled(enableslider1, false)
+		else 
+			Menu.SetEnabled(enableslider1, true)
+		end		
+	end
+
+	if Menu.IsKeyDownOnce(ToggleKey2) then
+		if Menu.IsEnabled(enableslider2) == true then
+			Menu.SetEnabled(enableslider2, false)
+		else 
+			Menu.SetEnabled(enableslider2, true)
+		end		
+	end
+end
+
+
 function CRR.ClearRadiuses()
     if radiusparticle1 then
         Particle.Destroy(radiusparticle1)
@@ -311,26 +339,6 @@ function CRR.OnDraw()
     end
 end
 
-function CRR.OnUpdate()
-	if not scriptEnable then
-        return
-    end
 
-	if Menu.IsKeyDownOnce(ToggleKey) then
-		if Menu.IsEnabled(enableslider1) == true then
-			Menu.SetEnabled(enableslider1, false)
-		else 
-			Menu.SetEnabled(enableslider1, true)
-		end		
-	end
-
-	if Menu.IsKeyDownOnce(ToggleKey2) then
-		if Menu.IsEnabled(enableslider2) == true then
-			Menu.SetEnabled(enableslider2, false)
-		else 
-			Menu.SetEnabled(enableslider2, true)
-		end		
-	end
-end 
 
 return CRR
