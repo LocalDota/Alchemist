@@ -20,13 +20,11 @@ local rootPath = "Hero Specific"
 
 local mainPath = {rootPath, "Death"}
 
-local settingsPath = {rootPath, "Death", "Settings"}
+local settingsPath = {rootPath, "Death Prophet", "Settings"}
 
-local skillsPath = {rootPath, "Death", "Skills"}
+local skillsPath = {rootPath, "Death Prophet", "Skills"}
 
-local itemsPath = {rootPath, "Death", "Items"}
-
-local unitsPath = {rootPath, "Death", "Units settings"}
+local itemsPath = {rootPath, "Death Prophet", "Items"}
 
 
 local optionEnable = Menu.AddOptionBool(mainPath, "Enable", false)
